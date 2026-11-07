@@ -1,0 +1,13 @@
+# استخدم الملف ده فقط لو ناوي تستضيف على GitLab Pages بدل GitHub
+image: python:3.12-slim
+
+pages:
+  stage: deploy
+  script:
+    - pip install -r requirements.txt
+    - mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

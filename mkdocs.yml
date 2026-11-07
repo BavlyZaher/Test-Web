@@ -1,0 +1,92 @@
+site_name: Sec-Notes
+site_description: Personal knowledge base for security research
+site_author: Your Name
+# لو الريبو اسمه مثلا sec-notes والمستخدم username:
+# site_url: https://username.github.io/sec-notes/
+
+hooks:
+  - hooks.py
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: notebook
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: dossier
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font: false
+
+nav:
+  - Library:
+      - Dashboard: index.md
+      - All Content: articles/index.md
+      # Every topic below this point (Web AppSec, HTB, Write-ups, ...) is
+      # inserted automatically by hooks.py's on_config from each topic's
+      # own front matter in docs/topics/<slug>.md — nothing to add here.
+  - Progress:
+      - This week: progress/this-week.md
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      toc_depth: "1-4"
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+plugins:
+  - search:
+      lang:
+        - en
+        - ar
+  - tags
+
+extra_css:
+  - https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap
+  - stylesheets/extra.css
+  - stylesheets/toc.css
+  - stylesheets/search.css
+
+extra_javascript:
+  - javascripts/sidebar-profile.js
+  - javascripts/notes-data.js
+  - javascripts/site.js
+  - javascripts/toc.js
