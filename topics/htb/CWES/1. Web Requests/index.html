@@ -1,0 +1,2296 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="One of the significant drawbacks of HTTP is that all data is transferred in clear-text">
+      
+      
+        <meta name="author" content="Your Name">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>1. Web Requests - Sec-Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/toc.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/search.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta property="og:site_name" content="Sec-Notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1. Web Requests · Sec-Notes">
+<meta property="og:description" content="One of the significant drawbacks of HTTP is that all data is transferred in clear-text">
+<meta property="og:image" content="../../../../assets/social-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="1. Web Requests · Sec-Notes">
+<meta name="twitter:description" content="One of the significant drawbacks of HTTP is that all data is transferred in clear-text">
+<meta name="twitter:image" content="../../../../assets/social-default.png">
+<meta property="article:published_time" content="2026-09-26">
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="notebook" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#web-requests" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Sec-Notes" class="md-header__button md-logo" aria-label="Sec-Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Sec-Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1. Web Requests
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="notebook" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="dossier" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Sec-Notes" class="md-nav__button md-logo" aria-label="Sec-Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Sec-Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../articles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../web-appsec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web AppSec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../network-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ai-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api-sec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Sec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mobile-sec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mobile Sec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../write-ups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write-ups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../checklists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checklists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progress
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Progress
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../progress/this-week/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    This week
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hypertext-transfer-protocol-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HyperText Transfer Protocol (HTTP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-flow-how-a-request-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Flow (How a Request Works)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP Flow (How a Request Works)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Note:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl-essential-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cURL (Essential Tool)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hypertext-transfer-protocol-secure-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hypertext Transfer Protocol Secure (HTTPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#https-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTPS Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#https-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTPS Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl-and-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cURL and HTTPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 3
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Request
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP Request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 4
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-headers-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Headers (Overview)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl-with-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cURL with Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-status-code-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Status Code Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-http-status-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common HTTP Status Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 6
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 6">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Basic Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-auth-response-unauthenticated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Auth Response (Unauthenticated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-methods-curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Methods (cURL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl-example-get-with-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cURL Example (GET with Auth)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 7
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 7">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#main-benefits-of-post-as-stated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Benefits of POST (as stated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-forms-with-post-using-curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login Forms with POST using cURL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json-data-with-post" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON Data with POST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 8
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 8">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apis-core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APIs (Core Idea)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crud-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRUD Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read (GET)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-post" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create (POST)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update (PUT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DELETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="web-requests">Web Requests</h1>
+<p><span class="sn-pub-date" data-date="2026-09-26"></span> · <span class="sn-read-badge"></span></p>
+
+<h2 id="section-1">Section 1</h2>
+<h3 id="hypertext-transfer-protocol-http">HyperText Transfer Protocol (HTTP)</h3>
+<ul>
+<li>The <strong>HyperText Transfer Protocol (HTTP)</strong> is (<strong>application-level protocol</strong>) the core protocol <strong>used for communication on the web requests</strong>.</li>
+<li><code>hypertext</code> stands for text containing links to other resources and text that the readers can easily interpret</li>
+<li>The default port for HTTP communication is port <strong><code>80</code></strong></li>
+<li>Works on a <strong>Client → Server</strong> model:<ul>
+<li><strong>Client (browser / tool)</strong> sends a request</li>
+<li><strong>Server</strong> processes it and returns a response</li>
+</ul>
+</li>
+<li>
+<p>We enter a <code>Fully Qualified Domain Name</code> (<code>FQDN</code>) as a <code>Uniform Resource Locator</code> (<code>URL</code>) to reach the desired website.</p>
+<p><code>FQDN</code> : This is the <strong>complete website name (part of the URL)</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>URL: https://www.hackthebox.com/login
+</span></code></pre></div>
+<ul>
+<li><code>https://</code> → protocol</li>
+<li><code>www.hackthebox.com</code> → <code>FQDN</code></li>
+<li><code>/login</code> → path</li>
+</ul>
+</li>
+</ul>
+<h3 id="url-structure">URL Structure</h3>
+<p><img alt="URL Structure" src="image%201%20%28URL%20Structure%29.png" /></p>
+<table>
+<thead>
+<tr>
+<th><strong>Component</strong></th>
+<th style="text-align: center;">Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scheme</strong></td>
+<td style="text-align: center;"><code>http://</code> <code>https://</code></td>
+<td>Defines the protocol used to access the resource. Ends with a colon and a double slash (<code>://</code>).</td>
+</tr>
+<tr>
+<td><strong>User Info</strong></td>
+<td style="text-align: center;"><code>admin:password@</code></td>
+<td>Optional credentials for authentication</td>
+</tr>
+<tr>
+<td><strong>Host (FQDN)</strong></td>
+<td style="text-align: center;"><code>inlanefreight.com</code></td>
+<td>The domain name or IP address of the server</td>
+</tr>
+<tr>
+<td><strong>Port</strong></td>
+<td style="text-align: center;"><code>:80</code> / <code>:443</code></td>
+<td>Specifies the port</td>
+</tr>
+<tr>
+<td><strong>Path</strong></td>
+<td style="text-align: center;"><code>/dashboard.php</code></td>
+<td>The specific resource or file on the server</td>
+</tr>
+<tr>
+<td><strong>Query String</strong></td>
+<td style="text-align: center;"><code>?id=1&amp;user=admin</code></td>
+<td>Parameters sent to the server</td>
+</tr>
+<tr>
+<td><strong>Fragment</strong></td>
+<td style="text-align: center;"><code>#section1</code></td>
+<td>Used by the browser to navigate (<strong>client-side only</strong>)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Minimum required = Scheme + Host</strong></p>
+</blockquote>
+<h3 id="http-flow-how-a-request-works">HTTP Flow (How a Request Works)</h3>
+<p><img alt="HTTP Flow" src="image%202%20%28HTTP%20Flow%29.png" /></p>
+<h4 id="steps">Steps:</h4>
+<ol>
+<li>User enters a domain</li>
+<li><strong>DNS</strong> resolves it to an IP address</li>
+<li>Browser sends an HTTP request</li>
+<li>Server responds with:<ul>
+<li>The resource (HTML, etc.)</li>
+<li>Status code (e.g., <code>200 OK</code>)</li>
+</ul>
+</li>
+</ol>
+<h4 id="important-note">Important Note:</h4>
+<ul>
+<li>System first checks records in the local <strong><code>/etc/hosts</code></strong></li>
+<li>If not found → <strong>queries DNS servers</strong></li>
+</ul>
+<h3 id="curl-essential-tool">cURL (Essential Tool)</h3>
+<ul>
+<li>A command-line tool to send HTTP requests</li>
+<li>Very important for <strong>web pentesting &amp; automation</strong></li>
+<li>
+<p>Basic usage: Shows raw HTML (not rendered like a browser)</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>inlanefreight.com
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Downloading Pages or Files with cURL</strong> using the <code>-O</code>  or <code>-o</code> flag</p>
+<ul>
+<li>Save with <strong>original</strong> name<strong>:</strong> <code>curl -O inlanefreight.com/index.html</code></li>
+<li>Save with <strong>custom</strong> name: <code>curl -o file.html inlanefreight.com/index.html</code></li>
+</ul>
+</li>
+<li>Important cURL Flags<ul>
+<li><strong><code>-d, --data</code></strong> → Send data in a POST request</li>
+<li><strong><code>-h, --help</code></strong> → Display help information</li>
+<li><strong><code>-i, --include</code></strong> → Show response headers in output</li>
+<li><strong><code>-o, --output</code></strong> → Save output to a specific file</li>
+<li><strong><code>-O, --remote-name</code></strong> → Save file using its original name</li>
+<li><strong><code>-s, --silent</code></strong> → Suppress output (silent mode)</li>
+<li><strong><code>-u, --user</code></strong> → Provide authentication (username:password)</li>
+<li><strong><code>-A, --user-agent</code></strong> → Set a custom User-Agent</li>
+<li><strong><code>-v, --verbose</code></strong> → Show detailed request/response info</li>
+<li><code>-vvv</code> → Extra verbose More low-level details (connection, TLS, etc.)</li>
+</ul>
+</li>
+</ul>
+<h3 id="question">📌 Question</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>&lt;SERVER_IP&gt;:&lt;PORT&gt;/download.php
+</span></code></pre></div>
+<p><img alt="Answer Sec1" src="image%203%20%28Answer%20Sec1%29.png" /></p>
+<h2 id="section-2">Section 2</h2>
+<h3 id="hypertext-transfer-protocol-secure-https">Hypertext Transfer Protocol Secure (HTTPS)</h3>
+<p>One of the significant drawbacks of <strong>HTTP</strong> is that <strong>all data is transferred in clear-text</strong></p>
+<p><strong>HyperText Transfer Protocol Secure</strong> is the secure version of <strong>HTTP</strong>.</p>
+<ul>
+<li>It <strong>encrypts all communication</strong> between client and server</li>
+<li>Prevents attackers from reading intercepted data (<strong>protects against MITM attacks</strong>)</li>
+</ul>
+<h3 id="https-overview">HTTPS Overview</h3>
+<p>❌ <strong>HTTP (Not secure)</strong></p>
+<ul>
+<li>Data is sent in <strong>clear text</strong></li>
+<li>Attackers can read credentials easily on the <strong>same network</strong> (public wireless network)</li>
+<li>Vulnerable to Man-in-the-Middle (<strong>MITM</strong>)</li>
+</ul>
+<p><img alt="HTTP (Not secure)" src="image%204%20%28HTTP%20%28Not%20secure%29%29.png" /></p>
+<p><strong>✅ HTTPS (Secure)</strong></p>
+<ul>
+<li>Data is <strong>encrypted (single encrypted stream)</strong></li>
+<li>Even if intercepted, it <strong>cannot be read</strong></li>
+<li>Uses <strong>SSL/TLS encryption</strong></li>
+</ul>
+<p><img alt="HTTPS (Secure)" src="image%205%20%28HTTPS%20%28Secure%29%29.png" /></p>
+<p><strong>How HTTPS is identified</strong></p>
+<ul>
+<li>URL starts with: <strong><code>https://</code></strong></li>
+<li>Browser shows a <strong>lock icon 🔒</strong></li>
+</ul>
+<p><img alt="HTTPS is identified" src="image%206%20%28HTTPS%20is%20identified%29.png" /></p>
+<p><strong>Important Security Note</strong></p>
+<ul>
+<li>DNS may still leak visited domains if not encrypted</li>
+<li>Use:<ul>
+<li>Encrypted DNS (<strong><code>8.8.8.8 / 1.1.1.1</code></strong>)</li>
+<li><strong>VPN</strong> for full protection</li>
+</ul>
+</li>
+</ul>
+<h3 id="https-flow">HTTPS Flow</h3>
+<p><img alt="HTTPS Flow" src="image%207%20%28HTTPS%20Flow%29.png" /></p>
+<ol>
+<li>User tries <strong><code>http://</code></strong></li>
+<li>Server redirects to <strong><code>https://</code></strong> (port <strong><code>443</code></strong>)</li>
+<li><strong>TLS</strong> handshake starts:<ul>
+<li>Client Hello</li>
+<li>Server Hello</li>
+<li>Certificate exchange</li>
+</ul>
+</li>
+<li><strong>Secure encrypted connection</strong> is established</li>
+<li><strong>Normal HTTP</strong> requests continue but <strong>encrypted</strong></li>
+</ol>
+<blockquote>
+<p><strong>Important Security Note:</strong>
+An HTTP downgrade attack can force HTTPS to HTTP, exposing data in clear-text via a MITM proxy. Modern browsers and servers usually prevent this attack.</p>
+</blockquote>
+<h3 id="curl-and-https">cURL and HTTPS</h3>
+<p><strong>Normal HTTPS request:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>https://example.com
+</span></code></pre></div>
+<p><strong>If SSL certificate is invalid:</strong></p>
+<ul>
+<li>cURL blocks the request for safety</li>
+</ul>
+<p><strong>Skip certificate check (NOT safe in real world):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://example.com
+</span></code></pre></div>
+<h2 id="section-3">Section 3</h2>
+<h3 id="http-request">HTTP Request</h3>
+<p><img alt="HTTP Request" src="image%208%20%28HTTP%20Request%29.png" /></p>
+<h4 id="structure">Structure</h4>
+<p><strong>Purpose:</strong> Ask the server for a resource</p>
+<ol>
+<li><strong>Request Line</strong><ul>
+<li><strong>Method (verb)</strong> → action (<code>GET</code>, <code>POST</code>, etc.)</li>
+<li><strong>Path</strong> → resource location (<code>/users/login.html</code>)</li>
+<li><strong>Version</strong> → HTTP version (<code>HTTP/1.1</code>)</li>
+</ul>
+</li>
+<li><strong>Headers</strong><ul>
+<li>Provide extra info about the request (specify various attributes of a request)</li>
+<li>Examples:<ul>
+<li><code>Host</code></li>
+<li><code>User-Agent</code></li>
+<li><code>Cookie</code></li>
+<li><code>Accept</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Empty Line</strong> (important separator)</li>
+<li><strong>Body (optional)</strong><ul>
+<li>Used mainly in <code>POST/PUT</code> requests</li>
+</ul>
+</li>
+</ol>
+<h4 id="http-versions">HTTP Versions</h4>
+<ul>
+<li><strong><code>HTTP/1.x</code></strong><ul>
+<li>Text-based (clear text)</li>
+<li>Uses newline separators</li>
+</ul>
+</li>
+<li><strong><code>HTTP/2</code></strong><ul>
+<li>Binary format</li>
+<li>Faster and more structured</li>
+</ul>
+</li>
+</ul>
+<h3 id="http-response">HTTP Response</h3>
+<p><img alt="HTTP Response" src="image%209%20%28HTTP%20Response%29.png" /></p>
+<h4 id="structure_1">Structure</h4>
+<p><strong>Purpose:</strong> Server reply to the request</p>
+<ol>
+<li><strong>Status Line</strong><ul>
+<li>HTTP version (<code>HTTP/1.1</code>)</li>
+<li>Status code (<code>200 OK</code>, <code>401 Unauthorized</code>)</li>
+</ul>
+</li>
+<li><strong>Headers</strong><ul>
+<li>Examples:<ul>
+<li><code>Server</code></li>
+<li><code>Content-Type</code></li>
+<li><code>Set-Cookie</code></li>
+<li><code>Content-Length</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Empty Line</strong></li>
+<li><strong>Body</strong><ul>
+<li>Can be:<ul>
+<li>HTML</li>
+<li>JSON</li>
+<li>Images / CSS / JS</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="question-1">📌 Question 1</h3>
+<p><img alt="Question 1 Sec 3" src="image%2010%20%28Question%201%20Sec%203%29.png" /></p>
+<h3 id="question-2">📌 Question 2</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>&lt;SERVER_IP&gt;:&lt;PORT&gt;
+</span></code></pre></div>
+<p><img alt="Question 2 Sec 3" src="image%2011%20%28Question%202%20Sec%203%29.png" /></p>
+<h2 id="section-4">Section 4</h2>
+<h3 id="http-headers-overview">HTTP Headers (Overview)</h3>
+<ul>
+<li>Headers = <strong>key:value pairs</strong> exchanged between client ↔ server</li>
+<li>Used to pass <strong>metadata (not actual content)</strong></li>
+<li>Can be:<ul>
+<li>Request-only</li>
+<li>Response-only</li>
+<li>Shared</li>
+</ul>
+</li>
+</ul>
+<p><strong>Main Categories:</strong></p>
+<ul>
+<li>General Headers</li>
+<li>Entity Headers</li>
+<li>Request Headers</li>
+<li>Response Headers</li>
+<li>Security Headers</li>
+</ul>
+<h3 id="general-headers">General Headers</h3>
+<p><strong>Used in both requests &amp; responses</strong> → Describe the message itself</p>
+<p><strong>Key Examples:</strong></p>
+<ul>
+<li><code>Date</code> → when the message was created (UTC)</li>
+<li><code>Connection</code><ul>
+<li><code>close</code> → terminate connection</li>
+<li><code>keep-alive</code> → keep connection open</li>
+</ul>
+</li>
+</ul>
+<h3 id="entity-headers">Entity Headers</h3>
+<p><strong>Describe the content (body/data)</strong> → Common in responses and <code>POST/PUT</code> requests</p>
+<p><strong>Key Examples:</strong></p>
+<ul>
+<li><code>Content-Type</code><ul>
+<li>Type of data (HTML, JSON, etc.)</li>
+<li>Example: <code>text/html; charset=UTF-8</code></li>
+</ul>
+</li>
+<li><code>Content-Length</code><ul>
+<li>Size of the data</li>
+</ul>
+</li>
+<li><code>Content-Encoding</code><ul>
+<li>Compression (e.g., <code>gzip</code>)</li>
+</ul>
+</li>
+<li><code>Transfer-Encoding: chunked</code><ul>
+<li>The <code>chunked</code> value lets a server stream a response without knowing its total length upfront</li>
+</ul>
+</li>
+<li><code>Boundary</code><ul>
+<li>A parameter of the <code>Content-Type</code> header, rather than a standalone header, used as a marker to separate content when a message contains more than one part </li>
+</ul>
+</li>
+</ul>
+<details class="warning">
+<summary>Warning</summary>
+<p><strong>Inconsistent handling</strong> of <strong><code>Transfer-Encoding</code></strong> and <strong><code>Content-Length</code></strong> between a front-end proxy and back-end server is the root cause of <strong>HTTP request smuggling attacks</strong>.</p>
+</details>
+<h3 id="request-headers">Request Headers</h3>
+<p><strong>Sent by the client (browser, curl)</strong> → Describe the request, not the content</p>
+<p><strong>Key Examples:</strong></p>
+<ul>
+<li><code>Host: www.inlanefreight.com</code><ul>
+<li>Target domain/IP</li>
+<li>Important for <strong>virtual host enumeration</strong></li>
+<li>a common target for <strong>Host header injection attacks</strong></li>
+</ul>
+</li>
+<li><code>User-Agent: curl/7.77.0</code><ul>
+<li>Info about client (browser, OS)</li>
+</ul>
+</li>
+<li><code>Referer: http://www.inlanefreight.com/</code><ul>
+<li>Source of the request</li>
+<li>Easily spoofed (<strong>not trustworthy</strong>)</li>
+</ul>
+</li>
+<li><code>Accept: */*</code><ul>
+<li>Supported response formats</li>
+</ul>
+</li>
+<li><code>Cookie: PHPSESSID=b4e4fbd93540</code><ul>
+<li>Session / tracking data</li>
+<li>Critical for <strong>authentication</strong></li>
+</ul>
+</li>
+<li><code>Authorization: Basic cGFzc3dvcmQK</code><ul>
+<li>Credentials or tokens (JWTs)</li>
+<li>Unlike a <code>cookie</code>, the value is generated and attached by the client on every request rather than being stored and sent automatically by the browser</li>
+</ul>
+</li>
+<li><code>X-Forwarded-For: 203.0.113.5</code>  <ul>
+<li>Added by proxies and load balancers to record the <strong>originating IP address</strong> of a client whose connection is being relayed</li>
+<li>it is <strong>client-controllable</strong>, it can often <strong>be spoofed</strong> to <strong>bypass IP-based access controls, rate limiting, or blocklists</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="response-headers">Response Headers</h3>
+<p><strong>Sent by the server</strong></p>
+<p><strong>Key Examples:</strong></p>
+<ul>
+<li><code>Server: Apache/2.4.41 (Ubuntu)</code><ul>
+<li>Server type/version</li>
+<li>Useful for <strong>fingerprinting</strong></li>
+</ul>
+</li>
+<li><code>Location: https://www.inlanefreight.com/login</code><ul>
+<li>Used with redirect status codes (<code>3xx</code>) to tell the client where the requested resource can be found</li>
+</ul>
+</li>
+<li><code>Set-Cookie: PHPSESSID=b4e4fbd93540; Secure; HttpOnly; SameSite=Strict</code><ul>
+<li>Sends cookies to client</li>
+<li><strong><code>Secure</code></strong> (only send over <strong>HTTPS</strong>)</li>
+<li><strong><code>HttpOnly</code></strong> (inaccessible to client-side JavaScript, mitigating cookie theft via <strong>XSS</strong>)</li>
+<li><strong><code>SameSite</code></strong> (<strong><code>Strict</code></strong>, <strong><code>Lax</code></strong>, or <strong><code>None</code></strong>, restricting when the cookie is sent on cross-site requests as a <strong>CSRF defense</strong>).</li>
+</ul>
+</li>
+<li><code>WWW-Authenticate: Basic realm="localhost"</code><ul>
+<li>Specifies required authentication type is sent alongside a <strong><code>401 Unauthorized</code></strong> status code</li>
+</ul>
+</li>
+</ul>
+<h3 id="security-headers">Security Headers</h3>
+<p><strong>Protect against web attacks</strong></p>
+<p><strong>Key Examples:</strong></p>
+<ul>
+<li>
+<p><code>Content-Security-Policy (CSP)</code></p>
+<ul>
+<li><strong>Purpose:</strong> Prevent loading malicious scripts/resources</li>
+<li>Defines <strong>allowed sources</strong> for content (JS, CSS, images…)</li>
+<li>Example: Only allow scripts from the same domain <code>Content-Security-Policy: script-src 'self'</code></li>
+<li>Preventing attacks such as <strong>Cross-Site Scripting (XSS)</strong></li>
+</ul>
+</li>
+<li>
+<p><code>Strict-Transport-Security (HSTS)</code></p>
+<ul>
+<li>Forces <strong>HTTPS</strong></li>
+<li>Prevents <strong>MITM/sniffing</strong></li>
+</ul>
+</li>
+<li>
+<p><code>X-Content-Type-Options: nosniff</code></p>
+<ul>
+<li>Tells the browser to <strong>strictly follow declared <code>Content-Type</code></strong> and never try to guess (<code>sniff</code>) a resource's actual MIME</li>
+</ul>
+</li>
+<li>
+<p><code>X-Frame-Options: DENY</code></p>
+<ul>
+<li>Controls whether the page can be rendered inside a <code>&lt;frame&gt;</code>, <code>&lt;iframe&gt;</code>, or <code>&lt;object</code>&gt;, protecting against <strong>clickjacking attacks</strong></li>
+</ul>
+</li>
+<li>
+<p><code>Access-Control-Allow-Origin: https://www.inlanefreight.com</code></p>
+<ul>
+<li>it tells the browser which origins are allowed to read the response to a cross-origin request</li>
+<li><strong>Misconfigurations</strong>, such as <strong>reflecting the requester's Origin header</strong> or <strong>using a wildcard (<code>*</code>)</strong> alongside credentials, are a common source of <strong>CORS-based vulnerabilities</strong>.</li>
+</ul>
+</li>
+<li>
+<p><code>Referrer-Policy</code></p>
+<ul>
+<li>Controls <strong>Referer</strong> behavior</li>
+<li>Protects <strong>sensitive data</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="curl-with-headers">cURL with Headers</h3>
+<p><strong>Show only headers:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://example.com
+</span></code></pre></div>
+<p><strong>Show headers + body:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-i<span class="w"> </span>https://example.com
+</span></code></pre></div>
+<p><strong>Add custom header:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Header: value"</span><span class="w"> </span>https://example.com
+</span></code></pre></div>
+<p><strong>Change User-Agent:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-A<span class="w"> </span><span class="s2">"Mozilla/5.0"</span><span class="w"> </span>https://example.com
+</span></code></pre></div>
+<h3 id="question_1">📌 Question</h3>
+<p><img alt="Question step 1 Sec 4" src="image%2012%20%28Question%20step%201%20Sec%204%29.png" /></p>
+<p><img alt="Question step 2 Sec 4" src="image%2013%20%28Question%20step%202%20Sec%204%29.png" /></p>
+<h2 id="section-5">Section 5</h2>
+<h3 id="http-methods">HTTP Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Purpose</th>
+<th>Where Data Goes</th>
+<th>Common Use</th>
+<th>Security Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td>Retrieve data</td>
+<td>URL (query string) <code>?param=value</code></td>
+<td>Fetch pages/data</td>
+<td>Sensitive data in URL</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td>Send data</td>
+<td>Request body</td>
+<td>Forms, login, uploads</td>
+<td>Data tampering</td>
+</tr>
+<tr>
+<td><code>HEAD</code></td>
+<td>Get headers only</td>
+<td>No body</td>
+<td>Check resource info</td>
+<td>Recon (headers, size)</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td>Create/replace resource</td>
+<td>Request body</td>
+<td>Upload/update files</td>
+<td>Upload malicious files</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td>Remove resource</td>
+<td>URL</td>
+<td>Delete data</td>
+<td>DoS / delete critical data</td>
+</tr>
+<tr>
+<td><code>OPTIONS</code></td>
+<td>Show allowed methods</td>
+<td>N/A</td>
+<td>Enumeration</td>
+<td>Discover attack surface</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td>Partial update</td>
+<td>Request body</td>
+<td>API updates</td>
+<td>Improper validation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="http-status-code-classes">HTTP Status Code Classes</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Class</th>
+<th>Meaning</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>1xx</code></td>
+<td>Informational</td>
+<td>Request received, continue</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>2xx</code></td>
+<td>Success</td>
+<td>Request processed successfully</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>3xx</code></td>
+<td>Redirection</td>
+<td>Client redirected</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>4xx</code></td>
+<td>Client Error</td>
+<td>requesting a resource that doesn't exist or requesting a bad format</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>5xx</code></td>
+<td>Server Error</td>
+<td>Problem on server side</td>
+</tr>
+</tbody>
+</table>
+<h3 id="common-http-status-codes">Common HTTP Status Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>Request succeeded</td>
+</tr>
+<tr>
+<td><code>302 Found</code></td>
+<td>Redirect</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>Invalid request</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>the client doesn't have appropriate access to the resource (Access denied)</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td><code>500 Internal Server Error</code></td>
+<td>Server failure</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-6">Section 6</h2>
+<h3 id="http-basic-authentication">HTTP Basic Authentication</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>Built-in web server authentication</td>
+</tr>
+<tr>
+<td>Flow</td>
+<td>Browser prompts for username/password</td>
+</tr>
+<tr>
+<td>Format</td>
+<td><code>username:password</code></td>
+</tr>
+<tr>
+<td>Example creds</td>
+<td><code>admin:admin</code></td>
+</tr>
+<tr>
+<td>Security</td>
+<td>⚠️ Sent <strong>Base64 encoded (NOT encrypted)</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="basic-auth-response-unauthenticated">Basic Auth Response (Unauthenticated)</h3>
+<p><code>curl -i http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/</code></p>
+<table>
+<thead>
+<tr>
+<th>Header / Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Access denied</td>
+</tr>
+<tr>
+<td><code>WWW-Authenticate: Basic realm="Access denied”</code></td>
+<td>Server requires Basic Auth</td>
+</tr>
+<tr>
+<td>Response body</td>
+<td>"Access denied"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="authentication-methods-curl">Authentication Methods (cURL)</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Example</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Using <code>-u</code></td>
+<td><code>curl -u admin:admin http://&lt;SERVER_IP&gt;:&lt;PORT&gt;</code></td>
+<td>Standard way</td>
+</tr>
+<tr>
+<td>Using URL format</td>
+<td><code>curl http://admin:admin@&lt;SERVER_IP&gt;:&lt;PORT&gt;/</code></td>
+<td>Works in browser/curl</td>
+</tr>
+<tr>
+<td>Manual header</td>
+<td><code>-H "Authorization: Basic ..."</code></td>
+<td>Direct control</td>
+</tr>
+</tbody>
+</table>
+<h3 id="curl-example-get-with-auth">cURL Example (GET with Auth)</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span><span class="s1">'http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/search.php?search=le'</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">'Authorization: Basic YWRtaW46YWRtaW4='</span>
+</span></code></pre></div>
+<h3 id="question_2">📌 Question</h3>
+<p><img alt="Question step 1 Sec 6" src="image%2014%20%28Question%20step%201%20Sec%206%29.png" />
+<img alt="Question step 2 Sec 6" src="image%2015%20%28Question%20step%202%20Sec%206%29.png" /></p>
+<h2 id="section-7">Section 7</h2>
+<h3 id="main-benefits-of-post-as-stated">Main Benefits of POST (as stated)</h3>
+<ol>
+<li><strong><code>Lack of Logging</code></strong><ul>
+<li>Data is not part of the URL</li>
+<li>Prevents large data (like files) from being logged</li>
+</ul>
+</li>
+<li><strong><code>Less Encoding Required</code></strong><ul>
+<li>URL has restrictions on characters</li>
+<li>POST body can handle raw/binary data</li>
+<li>Only separators need encoding</li>
+</ul>
+</li>
+<li><strong><code>More Data Can Be Sent</code></strong><ul>
+<li>URLs have length limits (~2000 chars)</li>
+<li>POST does not have this limitation</li>
+</ul>
+</li>
+</ol>
+<h3 id="login-forms-with-post-using-curl">Login Forms with POST using cURL</h3>
+<ul>
+<li>
+<p>Login forms send credentials like:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>username=admin&amp;password=admin
+</span></code></pre></div>
+</li>
+<li>
+<p>Sending POST with cURL</p>
+<p><code>curl -X POST -d 'username=admin&amp;password=admin' http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/</code></p>
+</li>
+<li>
+<p>Redirects with cURL</p>
+<ul>
+<li>Some apps redirect after login (e.g., <code>/dashboard</code>)</li>
+<li>Use <code>-L</code> in cURL to follow redirects</li>
+</ul>
+</li>
+<li>
+<p><strong>Authenticated Cookies</strong> with cURL</p>
+<p><code>curl -b 'PHPSESSID=c1nsa6op7vtk7kdis7bcnbadf1' http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/</code></p>
+<p>OR</p>
+<p><code>curl -H 'Cookie: PHPSESSID=c1nsa6op7vtk7kdis7bcnbadf1' http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/</code></p>
+</li>
+</ul>
+<h3 id="json-data-with-post">JSON Data with POST</h3>
+<ul>
+<li>
+<p>Some POST requests send data in JSON format:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span><span class="nt">"search"</span><span class="p">:</span><span class="s2">"london"</span><span class="p">}</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Requires header <code>Content-Type: application/json</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Content-Type:<span class="w"> </span>application/json
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"search":"london"}'</span><span class="w"> </span>-b<span class="w"> </span><span class="s1">'PHPSESSID=c1nsa6op7vtk7kdis7bcnbadf1'</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span>http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/search.php
+</span></code></pre></div>
+</li>
+</ul>
+<h3 id="question_3">📌 Question</h3>
+<p><img alt="Question step 1 Sec 7" src="image%2016%20%28Question%20step%201%20Sec%207%29.png" />
+<img alt="Question step 2 Sec 7" src="image%2017%20%28Question%20step%202%20Sec%207%29.png" /></p>
+<h2 id="section-8">Section 8</h2>
+<h3 id="apis-core-idea">APIs (Core Idea)</h3>
+<ul>
+<li>APIs are used to <strong>interact with a database</strong></li>
+<li>You can:<ul>
+<li>Specify the <strong>table</strong> (e.g. <code>/city</code>)</li>
+<li>Specify the <strong>row/entity</strong> (e.g. <code>/london</code>)</li>
+</ul>
+</li>
+<li>Then use an <strong>HTTP method</strong> to perform an operation</li>
+</ul>
+<p>Example:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/api.php/city/london
+</span></code></pre></div>
+<h3 id="crud-operations">CRUD Operations</h3>
+<p>APIs typically support 4 main operations:</p>
+<ul>
+<li><strong>Create (<code>POST</code>)</strong> → add new data</li>
+<li><strong>Read (<code>GET</code>)</strong> → retrieve data</li>
+<li><strong>Update (<code>PUT</code>)</strong> → modify data</li>
+<li><strong>Delete (<code>DELETE</code>)</strong> → remove data</li>
+<li>These operations are used in:<ul>
+<li>CRUD APIs</li>
+<li>REST APIs</li>
+</ul>
+</li>
+</ul>
+<h3 id="read-get">Read (<code>GET</code>)</h3>
+<ul>
+<li>Used to <strong>retrieve data from the API</strong></li>
+<li>Examples:<ul>
+<li><code>/city/london</code> → get specific city</li>
+<li><code>/city/le</code> → search results</li>
+<li><code>/city/</code> → get all entries</li>
+</ul>
+</li>
+<li>Response is returned as <strong>JSON</strong></li>
+<li>Can be formatted using tools like <code>jq</code>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="m">154</span>.57.164.79:32471/api.php/city/london<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</span></code></pre></div></li>
+</ul>
+<h3 id="create-post">Create (<code>POST</code>)</h3>
+<ul>
+<li>Used to <strong>add new data</strong></li>
+<li>Send data as <strong>JSON in request body</strong></li>
+<li>Must include: <code>Content-Type: application/json</code></li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/api.php/city/<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"city_name":"HTB_City", "country_name":"HTB"}'</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span>
+</span></code></pre></div>
+<p><img alt="Create API" src="image%2018%20%28Create%20API%29.png" /></p>
+<h3 id="update-put">Update (<code>PUT</code>)</h3>
+<ul>
+<li>Used to <strong>modify existing data</strong></li>
+<li>Must:<ul>
+<li>Specify the target entity in URL (<code>/city/london</code>)</li>
+<li>Send updated data in JSON</li>
+</ul>
+</li>
+<li>Result:<ul>
+<li>Old data is replaced with new data</li>
+</ul>
+</li>
+<li>Note:<ul>
+<li>Some APIs may create data if it doesn’t exist (not always)</li>
+</ul>
+</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/api.php/city/london<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"city_name":"New_HTB_City", "country_name":"HTB"}'</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span>
+</span></code></pre></div>
+<p><img alt="Update API" src="image%2019%20%28Update%20API%29.png" /></p>
+<h3 id="delete">DELETE</h3>
+<ul>
+<li>Used to <strong>remove data</strong></li>
+<li>Simply:<ul>
+<li>Specify entity in URL</li>
+<li>Use DELETE method</li>
+</ul>
+</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/api.php/city/New_HTB_City
+</span></code></pre></div>
+<h3 id="question_4">📌 Question</h3>
+<p><img alt="Question Sec 8" src="image%2020%20%28Question%20Sec%208%29.png" /></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../../../javascripts/sidebar-profile.js"></script>
+      
+        <script src="../../../../javascripts/notes-data.js"></script>
+      
+        <script src="../../../../javascripts/site.js"></script>
+      
+        <script src="../../../../javascripts/toc.js"></script>
+      
+    
+  </body>
+</html>
