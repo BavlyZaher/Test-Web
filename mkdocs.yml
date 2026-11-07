@@ -2,7 +2,7 @@ site_name: Sec-Notes
 site_description: Personal knowledge base for security research
 site_author: Your Name
 # لو الريبو اسمه مثلا sec-notes والمستخدم username:
-# site_url: https://username.github.io/sec-notes/
+site_url: https://bavlyzaher.github.io/Test-Web/
 
 hooks:
   - hooks.py
